@@ -10,10 +10,16 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "keywords": ["import"],
+  "keywords": [
+    "import"
+  ],
   "author": {
     "name": "Pedro Queiroz",
     "url": "https://github.com/pmqueiroz"
   },
-  "license": "MIT"
+  "license": "MIT",
+  "dependencies": {
+    "espree": "^9.4.1",
+    "gluegun": "^5.1.2"
+  }
 }
