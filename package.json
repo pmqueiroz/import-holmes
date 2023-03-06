@@ -1,0 +1,19 @@
+{
+  "name": "import-analyzer",
+  "version": "0.1.0",
+  "description": "",
+  "repository": "pmqueiroz/import-analyzer",
+  "main": "build/index.js",
+  "bin": {
+    "ipan": "bin/ipan"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "keywords": ["import"],
+  "author": {
+    "name": "Pedro Queiroz",
+    "url": "https://github.com/pmqueiroz"
+  },
+  "license": "MIT"
+}
