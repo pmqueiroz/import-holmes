@@ -3,11 +3,14 @@
   "version": "0.1.0",
   "description": "",
   "repository": "pmqueiroz/import-analyzer",
-  "main": "build/index.js",
   "bin": {
-    "ipan": "bin/ipan"
+    "import-analyzer": "bin/import-analyzer",
+    "impan": "bin/import-analyzer"
   },
   "scripts": {
+    "clean-build": "rm -rf ./build",
+    "compile": "tsc -p .",
+    "build": "pnpm clean-build && pnpm compile",
     "dev": "pnpm ts-node -T src/index.ts",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -27,6 +30,7 @@
   "devDependencies": {
     "@types/estree": "^1.0.0",
     "@types/lodash.curry": "^4.1.7",
+    "@types/node": "^18.14.6",
     "ts-node": "^10.9.1",
     "typescript": "^4.9.5"
   }
