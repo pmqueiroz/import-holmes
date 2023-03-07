@@ -17,6 +17,12 @@
   "keywords": [
     "import"
   ],
+  "files": [
+    "build",
+    "LICENSE",
+    "readme.md",
+    "bin"
+  ],
   "author": {
     "name": "Pedro Queiroz",
     "url": "https://github.com/pmqueiroz"
