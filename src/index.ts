@@ -8,4 +8,4 @@ import React from 'react'
 import { Button, IconText } from '@dlpco/ginga-stone'
 `
 
-console.log(parseModule(mockEntry))
+console.log(parseModule(mockEntry, {  moduleName: 'react' }))
