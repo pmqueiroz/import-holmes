@@ -1,4 +1,4 @@
-import { parseModule } from './parser'
+import { parseModule } from './core'
 
 const mockEntry = `
 import { useState, useRef, useContext as cleiton } from 'react'
