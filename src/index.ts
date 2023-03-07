@@ -1,5 +1,11 @@
 import { parseModule } from './parser'
 
-const mockEntry = `import { useState } from 'react'`
+const mockEntry = `
+import { useState, useRef, useContext as cleiton } from 'react'
+
+import React from 'react'
+
+import { Button, IconText } from '@dlpco/ginga-stone'
+`
 
 console.log(parseModule(mockEntry))
