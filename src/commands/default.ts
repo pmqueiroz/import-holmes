@@ -1,6 +1,34 @@
 import { GluegunToolbox } from 'gluegun'
 import { glob } from 'glob'
 import { parseModule } from '../core'
+import { ImportStatement, ImportStatementWithOccur } from '../types'
+import groupBy from 'lodash.groupby'
+
+const withOccurrences = (results: ImportStatement[]) => {
+   return results.reduce((acc, curr) => {
+      const repeated = acc.find(item => item.moduleName === curr.moduleName && item.specifier === curr.specifier)
+      if (repeated) {
+         const repeatedIndex = acc.indexOf(repeated)
+         acc[repeatedIndex] = { ...repeated, occurrences: repeated.occurrences + 1 }
+         return acc
+      }
+
+      return [...acc, { ...curr, occurrences: 1 }]
+   }, [] as ImportStatementWithOccur[])
+}
+
+
+const generateTable = (results: ImportStatementWithOccur[]) => {
+   const columnsName = ['Specifier', 'Module', 'Occurrences']
+
+   const byModuleName = Object.values(groupBy(results, statement => statement.moduleName))
+
+   return byModuleName.reduce((acc, curr) => {
+      const formattedSpecifiers = curr.map(stt => [stt.specifier, stt.moduleName, String(stt.occurrences)])
+
+      return [...acc, ...formattedSpecifiers]
+   }, [columnsName])
+}
 
 export default {
    name: 'package',
@@ -17,9 +45,10 @@ export default {
       })
 
       print.info(`Found ${globFiles.length} files... Starting analysis`)
+      const spinner = print.spin()
 
-      const analysisErrors = []
-      const analysisResult = globFiles.flatMap(file => {
+      const analysisErrors = []  
+      const analysisResult = await Promise.all(globFiles.flatMap(file => {
          try {
             return parseModule(filesystem.read(file) || '', { modulesFilter: installedPackages })
          } catch (error) {
@@ -30,9 +59,16 @@ export default {
 
             return []
          }
-      })
+      }))
+      const cleanAnalysisResult = analysisResult.flat()
+      const resultsWithOccurrences = withOccurrences(cleanAnalysisResult)
 
-      print.info(analysisResult)
-      print.error(`got ${analysisErrors.length} errors`)
+      spinner.stop()
+
+      print.table(generateTable(resultsWithOccurrences), { format: 'lean' })
+
+      if (analysisErrors.length) {
+         print.error(`got ${analysisErrors.length} errors`)
+      }
    }
 }
