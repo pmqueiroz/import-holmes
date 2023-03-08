@@ -17,6 +17,9 @@ const withOccurrences = (results: ImportStatement[]) => {
    }, [] as ImportStatementWithOccur[])
 }
 
+const sortByOccurrences = (a: ImportStatementWithOccur, b: ImportStatementWithOccur) => {
+   return b.occurrences - a.occurrences
+}
 
 const generateTable = (results: ImportStatementWithOccur[]) => {
    const columnsName = ['Specifier', 'Module', 'Occurrences']
@@ -24,7 +27,7 @@ const generateTable = (results: ImportStatementWithOccur[]) => {
    const byModuleName = Object.values(groupBy(results, statement => statement.moduleName))
 
    return byModuleName.reduce((acc, curr) => {
-      const formattedSpecifiers = curr.map(stt => [stt.specifier, stt.moduleName, String(stt.occurrences)])
+      const formattedSpecifiers = curr.sort(sortByOccurrences).map(stt => [stt.specifier, stt.moduleName, String(stt.occurrences)])
 
       return [...acc, ...formattedSpecifiers]
    }, [columnsName])
