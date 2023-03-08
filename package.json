@@ -1,11 +1,11 @@
 {
-  "name": "import-analyzer",
+  "name": "import-holmes",
   "version": "0.1.0",
   "description": "",
-  "repository": "pmqueiroz/import-analyzer",
+  "repository": "pmqueiroz/import-holmes",
   "bin": {
-    "import-analyzer": "bin/import-analyzer",
-    "impan": "bin/import-analyzer"
+    "import-holmes": "bin/import-holmes",
+    "imp-hlm": "bin/import-holmes"
   },
   "scripts": {
     "clean-build": "rm -rf ./build",
