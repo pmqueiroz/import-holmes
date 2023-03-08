@@ -30,6 +30,7 @@
   "license": "MIT",
   "dependencies": {
     "espree": "^9.4.1",
+    "glob": "^9.2.1",
     "gluegun": "^5.1.2",
     "lodash.curry": "^4.1.1"
   },
