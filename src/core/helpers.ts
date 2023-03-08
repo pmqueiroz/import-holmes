@@ -1,7 +1,7 @@
-import type { Node, Program, ImportDeclaration } from 'estree'
+import { Module, ModuleItem, ImportDeclaration } from "@swc/core"
 
-const importDeclarationFilter = (node: Node) => node.type === 'ImportDeclaration'
+const importDeclarationFilter = (node: ModuleItem) => node.type === 'ImportDeclaration'
 
-export const getImportDeclarationsNodes = (program: Program) => {
+export const getImportDeclarationsNodes = (program: Module) => {
    return program.body.filter(importDeclarationFilter) as ImportDeclaration[]
 }
