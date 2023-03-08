@@ -1,8 +1,10 @@
 import { build } from 'gluegun'
+import defaultCommand from './commands/default'
 
 export const run = (argv: NodeJS.Process['argv']) => {
    const cli = build('import-analyzer')
       .src(__dirname)
+      .defaultCommand(defaultCommand)
       .help()
       .version()
       .exclude(['semver', 'http', 'template', 'patching'])

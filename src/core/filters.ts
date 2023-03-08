@@ -1,28 +1,29 @@
 import { ImportStatement, ParseModuleOptions } from "../types"
 import curry from 'lodash.curry'
 
-type FilterOptions = Pick<ParseModuleOptions, 'moduleName' | 'specifier'>
+type FilterOptions = Pick<ParseModuleOptions, 'modulesFilter' | 'specifiersFilter'>
 
-const filterByModuleName = curry((moduleName: string, statements: ImportStatement[]) => {
-   return statements.filter(statement => statement.moduleName === moduleName)
+const filterByModuleNames = curry((modules: string[], statements: ImportStatement[]) => {
+   return statements.filter(statement => modules.includes(statement.moduleName))
 })
 
-const filterBySpecifier = curry((specifier: string, statements: ImportStatement[]) => {
-   return statements.filter(statement => statement.specifier === specifier)
+const filterBySpecifiers = curry((specifiers: string[], statements: ImportStatement[]) => {
+   return statements.filter(statement => specifiers.includes(statement.specifier))
 })
 
 /**
  * @todo fix this type
 */
-const optionFilterMap: Record<keyof FilterOptions, typeof filterByModuleName> = {
-   moduleName: filterByModuleName,
-   specifier: filterBySpecifier
+const optionFilterMap: Record<keyof FilterOptions, typeof filterByModuleNames> = {
+   modulesFilter: filterByModuleNames,
+   specifiersFilter: filterBySpecifiers
 }
 
 export const generateFilters = (options: FilterOptions) => {
    return Object.keys(options).map(optKey => {
       const filter = optionFilterMap[optKey as keyof FilterOptions]
-
-      return filter(options[optKey as keyof FilterOptions]!)
+      const entries = [options[optKey as keyof FilterOptions]!].flat()
+      
+      return filter(entries)
    })
 }

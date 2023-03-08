@@ -4,6 +4,6 @@ export interface ImportStatement {
 }
 
 export interface ParseModuleOptions {
-   moduleName?: string
-   specifier?: string
+   modulesFilter?: string | string[]
+   specifiersFilter?: string | string[]
 }

@@ -6,19 +6,24 @@ export default {
    name: 'package',
    alias: 'p',
    run: async ({ print, filesystem }: GluegunToolbox) => {
+      const currentProjectPackage = filesystem.read('package.json', 'json')
+
+      if (!currentProjectPackage) throw print.error('no package.json file found.')
+
+      const installedPackages = [...Object.keys(currentProjectPackage.dependencies), ...Object.keys(currentProjectPackage.devDependencies)]
+
       const globFiles = await glob('**/*.{ts,tsx}', {
          ignore: ['node_modules/**', '**/*.{spec,test}.{ts,tsx}', '**/*.d.ts']
       })
 
-      const errors = []
-
       print.info(`Found ${globFiles.length} files... Starting analysis`)
 
+      const analysisErrors = []
       const analysisResult = globFiles.flatMap(file => {
          try {
-            return parseModule(filesystem.read(file) || '')
+            return parseModule(filesystem.read(file) || '', { modulesFilter: installedPackages })
          } catch (error) {
-            errors.push({ 
+            analysisErrors.push({ 
                file,
                error
             })
@@ -28,6 +33,6 @@ export default {
       })
 
       print.info(analysisResult)
-      print.error(`got ${errors.length} errors`)
+      print.error(`got ${analysisErrors.length} errors`)
    }
 }
