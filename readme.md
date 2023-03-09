@@ -33,10 +33,19 @@ import-holmes -m react # search all imports from react library
 import-holmes -s useState # search all 'useState' specifier import
 ```
 
+| Options | Default | Meaning |
+|---------|---------|---------|
+| `-m`, `--module` | | Filter inspection by module's name |
+| `-s`, `--specifier` | | Filter inspection by specifier name |
+
 ### Core
 
+This package also provides the core function under the cli.
+
+#### inspectModule
+
 ```ts
-import { parseModule } from 'import-holmes'
+import { inspectModule } from 'import-holmes'
 
 const someCode = `\
 import a from 'b'
@@ -44,7 +53,7 @@ import { c } from 'd'
 import { e as f } from 'g'
 `
 
-const inspect = parseModule(someCode)
+const inspect = inspectModule(someCode)
 
 // outputs
 [
@@ -53,6 +62,10 @@ const inspect = parseModule(someCode)
   { specifier: 'e', moduleName: 'g' }
 ]
 ```
+
+#### Options
+
+
 
 <div align="center">
 
