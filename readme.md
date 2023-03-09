@@ -33,10 +33,10 @@ import-holmes -m react # search all imports from react library
 import-holmes -s useState # search all 'useState' specifier import
 ```
 
-| Options | Default | Meaning |
-|---------|---------|---------|
-| `-m`, `--module` | | Filter inspection by module's name |
-| `-s`, `--specifier` | | Filter inspection by specifier name |
+| Options | Meaning |
+|---------|---------|
+| `-m`, `--module` | Filter inspection by module's name |
+| `-s`, `--specifier` | Filter inspection by specifier name |
 
 ### Core
 
