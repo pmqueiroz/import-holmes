@@ -1,15 +1,13 @@
 import { parseModule } from './core'
 
-const mockEntry = `
-import { useState, useRef, useContext as cleiton } from 'react'
-
-import React from 'react'
-
-import { Button, IconText } from '@dlpco/ginga-stone'
+const mockEntry = `\
+import a from 'b'
+import { c } from 'd'
+import { e as f } from 'g'
 `
 
 ;(async () => {
-   const result = await parseModule(mockEntry, {  modulesFilter: 'react' })
+   const result = await parseModule(mockEntry)
 
    console.log(result)
 })()
