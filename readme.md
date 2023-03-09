@@ -44,6 +44,8 @@ This package also provides the core function under the cli.
 
 #### inspectModule
 
+inspects a typescript/javascript module searching for import declarations and returns results from imports 
+
 ```ts
 import { inspectModule } from 'import-holmes'
 
@@ -62,9 +64,14 @@ const inspect = inspectModule(someCode)
   { specifier: 'e', moduleName: 'g' }
 ]
 ```
+There are some available options in inspect module
 
-#### Options
-
+```ts
+inspectModule('source code', {
+   modulesFilter?: string | string[]
+   specifiersFilter?: string | string[]
+})
+```
 
 
 <div align="center">
