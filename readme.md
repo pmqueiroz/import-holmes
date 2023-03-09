@@ -12,6 +12,20 @@
 
 ## Getting Started
 
+### Installing
+
+```sh
+# recommended
+npx import-holmes
+# or
+pnpm add -g import-holmes
+# or
+yarn global add import-holmes
+# or
+npm add --location=global import-holmes
+```
+> **Warning** if your intention is use the core functions in your project consider not using global install
+
 ### Cli
 
 ```sh
