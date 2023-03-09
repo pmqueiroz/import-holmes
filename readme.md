@@ -3,7 +3,6 @@
 
 ![import-holmes](./.github/brand.png)
 
-
 <div align="center">
 
 <samp> **Import Holmes** is a tool to inspect Javascript/Typescript projects imports</samp> 
@@ -24,7 +23,7 @@ yarn global add import-holmes
 # or
 npm add --location=global import-holmes
 ```
-> **Warning** if your intention is use the core functions in your project consider not using global install
+> **Warning** if your intention is to use the core functions in your project consider not using global install
 
 ### Cli
 
@@ -72,7 +71,6 @@ inspectModule('source code', {
    specifiersFilter?: string | string[]
 })
 ```
-
 
 <div align="center">
 
