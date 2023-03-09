@@ -1,10 +1,10 @@
 import { GluegunToolbox } from 'gluegun'
 import { glob } from 'glob'
 import { inspectModule } from '../core/inspect-module'
-import { ImportStatement, ImportStatementWithOccur } from '../types'
+import { ImportHolmesInspect, ImportHolmesInspectWithOccur } from '../types'
 import groupBy from 'lodash.groupby'
 
-const withOccurrences = (results: ImportStatement[]) => {
+const withOccurrences = (results: ImportHolmesInspect[]) => {
    return results.reduce((acc, curr) => {
       const repeated = acc.find(item => item.moduleName === curr.moduleName && item.specifier === curr.specifier)
       if (repeated) {
@@ -14,14 +14,14 @@ const withOccurrences = (results: ImportStatement[]) => {
       }
 
       return [...acc, { ...curr, occurrences: 1 }]
-   }, [] as ImportStatementWithOccur[])
+   }, [] as ImportHolmesInspectWithOccur[])
 }
 
-const sortByOccurrences = (a: ImportStatementWithOccur, b: ImportStatementWithOccur) => {
+const sortByOccurrences = (a: ImportHolmesInspectWithOccur, b: ImportHolmesInspectWithOccur) => {
    return b.occurrences - a.occurrences
 }
 
-const generateTable = (results: ImportStatementWithOccur[]) => {
+const generateTable = (results: ImportHolmesInspectWithOccur[]) => {
    const columnsName = ['Specifier', 'Module', 'Occurrences']
 
    const byModuleName = Object.values(groupBy(results, statement => statement.moduleName))

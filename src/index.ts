@@ -1,4 +1,4 @@
-import { parseModule } from './core/inspect-module'
+import { inspectModule } from './core/inspect-module'
 
 const mockEntry = `\
 import a from 'b'
@@ -7,7 +7,7 @@ import { e as f } from 'g'
 `
 
 ;(async () => {
-   const result = await parseModule(mockEntry)
+   const result = await inspectModule(mockEntry)
 
    console.log(result)
 })()

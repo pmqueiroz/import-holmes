@@ -1,7 +1,7 @@
 import { parse, ParseOptions, ImportDeclaration, NamedImportSpecifier } from '@swc/core'
 
 import { getImportDeclarationsNodes } from './helpers'
-import type { ImportStatement, ParseModuleOptions } from '../types'
+import type { ImportHolmesInspect, ParseModuleOptions } from '../types'
 import { generateFilters } from './filters'
 
 const parseOptions: ParseOptions = { 
@@ -9,8 +9,8 @@ const parseOptions: ParseOptions = {
    tsx: true
 }
 
-const getImportStatements = (nodes: ImportDeclaration[]) => nodes.reduce((acc, curr) => {
-   const statements: ImportStatement[] = curr.specifiers.map(specifier => {
+const getImportHolmesInspects = (nodes: ImportDeclaration[]) => nodes.reduce((acc, curr) => {
+   const statements: ImportHolmesInspect[] = curr.specifiers.map(specifier => {
       return {
          specifier: (specifier as NamedImportSpecifier).imported?.value || specifier.local.value,
          moduleName: String(curr.source.value) || ""
@@ -18,13 +18,13 @@ const getImportStatements = (nodes: ImportDeclaration[]) => nodes.reduce((acc, c
    })
 
    return [...acc, ...statements]
-}, [] as ImportStatement[])
+}, [] as ImportHolmesInspect[])
 
 
-export const inspectModule = async (code: string, options: ParseModuleOptions = {}): Promise<ImportStatement[]> => {
+export const inspectModule = async (code: string, options: ParseModuleOptions = {}): Promise<ImportHolmesInspect[]> => {
    const programAst = await parse(code, parseOptions)
    const importNodes = getImportDeclarationsNodes(programAst)
-   const statements = getImportStatements(importNodes)
+   const statements = getImportHolmesInspects(importNodes)
    const filters = generateFilters(options)
 
    return filters.reduce((acc, currFilter) => {

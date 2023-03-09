@@ -1,13 +1,13 @@
-import { ImportStatement, ParseModuleOptions } from "../types"
+import { ImportHolmesInspect, ParseModuleOptions } from "../types"
 import curry from 'lodash.curry'
 
 type FilterOptions = Pick<ParseModuleOptions, 'modulesFilter' | 'specifiersFilter'>
 
-const filterByModuleNames = curry((modules: string[], statements: ImportStatement[]) => {
+const filterByModuleNames = curry((modules: string[], statements: ImportHolmesInspect[]) => {
    return statements.filter(statement => modules.includes(statement.moduleName))
 })
 
-const filterBySpecifiers = curry((specifiers: string[], statements: ImportStatement[]) => {
+const filterBySpecifiers = curry((specifiers: string[], statements: ImportHolmesInspect[]) => {
    return statements.filter(statement => specifiers.includes(statement.specifier))
 })
 

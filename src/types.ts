@@ -1,9 +1,9 @@
-export interface ImportStatement {
+export interface ImportHolmesInspect {
    moduleName: string
    specifier: string
 }
 
-export interface ImportStatementWithOccur extends ImportStatement {
+export interface ImportHolmesInspectWithOccur extends ImportHolmesInspect {
    occurrences: number
 }
 
