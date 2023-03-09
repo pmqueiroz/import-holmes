@@ -1,6 +1,6 @@
 import { GluegunToolbox } from 'gluegun'
 import { glob } from 'glob'
-import { parseModule } from '../core'
+import { inspectModule } from '../core/inspect-module'
 import { ImportStatement, ImportStatementWithOccur } from '../types'
 import groupBy from 'lodash.groupby'
 
@@ -53,7 +53,7 @@ export default {
       const analysisErrors = []  
       const analysisResult = await Promise.all(globFiles.flatMap(file => {
          try {
-            return parseModule(filesystem.read(file) || '', { modulesFilter: installedPackages })
+            return inspectModule(filesystem.read(file) || '', { modulesFilter: installedPackages })
          } catch (error) {
             analysisErrors.push({ 
                file,

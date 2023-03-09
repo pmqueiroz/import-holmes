@@ -21,7 +21,7 @@ const getImportStatements = (nodes: ImportDeclaration[]) => nodes.reduce((acc, c
 }, [] as ImportStatement[])
 
 
-export const parseModule = async (code: string, options: ParseModuleOptions = {}): Promise<ImportStatement[]> => {
+export const inspectModule = async (code: string, options: ParseModuleOptions = {}): Promise<ImportStatement[]> => {
    const programAst = await parse(code, parseOptions)
    const importNodes = getImportDeclarationsNodes(programAst)
    const statements = getImportStatements(importNodes)

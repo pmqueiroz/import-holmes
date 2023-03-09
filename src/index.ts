@@ -1,4 +1,4 @@
-import { parseModule } from './core'
+import { parseModule } from './core/inspect-module'
 
 const mockEntry = `\
 import a from 'b'
