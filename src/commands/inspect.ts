@@ -46,7 +46,7 @@ export default {
       /**
        * @todo add an option to increment these
        */
-      ignore: ['node_modules/**', '**/*.{spec,test}.{ts,tsx}', '**/*.d.ts']
+      ignore: ['node_modules/**', '**/*.{spec,test}.{js,jsx,ts,tsx}', '**/*.d.ts']
     })
 
     print.info(`Found ${globFiles.length} files... Starting analysis`)
@@ -59,7 +59,10 @@ export default {
     const analysisResult = await Promise.all(
       globFiles.flatMap(file => {
         try {
-          return inspectModule(filesystem.read(file) || '', { modulesFilter: installedPackages })
+          return inspectModule(filesystem.read(file) || '', {
+            modulesFilter: installedPackages,
+            print
+          })
         } catch (error) {
           analysisErrors.push({
             file,
