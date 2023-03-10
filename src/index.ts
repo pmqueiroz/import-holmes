@@ -7,7 +7,7 @@ import { e as f } from 'g'
 `
 
 ;(async () => {
-   const result = await inspectModule(mockEntry)
+  const result = await inspectModule(mockEntry)
 
-   console.log(result)
+  console.log(result)
 })()

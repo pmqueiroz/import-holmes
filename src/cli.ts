@@ -2,13 +2,13 @@ import { build } from 'gluegun'
 import defaultCommand from './commands/default'
 
 export const run = (argv: NodeJS.Process['argv']) => {
-   const cli = build('import-holmes')
-      .src(__dirname)
-      .defaultCommand(defaultCommand)
-      .help()
-      .version()
-      .exclude(['semver', 'http', 'template', 'patching'])
-      .create()
+  const cli = build('import-holmes')
+    .src(__dirname)
+    .defaultCommand(defaultCommand)
+    .help()
+    .version()
+    .exclude(['semver', 'http', 'template', 'patching'])
+    .create()
 
-   cli.run(argv)
+  cli.run(argv)
 }
