@@ -6,7 +6,9 @@ import groupBy from 'lodash.groupby'
 
 const withOccurrences = (results: ImportHolmesInspect[]) => {
   return results.reduce((acc, curr) => {
-    const repeated = acc.find(item => item.moduleName === curr.moduleName && item.specifier === curr.specifier)
+    const repeated = acc.find(
+      item => item.moduleName === curr.moduleName && item.specifier === curr.specifier
+    )
     if (repeated) {
       const repeatedIndex = acc.indexOf(repeated)
       acc[repeatedIndex] = { ...repeated, occurrences: repeated.occurrences + 1 }
@@ -26,11 +28,16 @@ const generateTable = (results: ImportHolmesInspectWithOccur[]) => {
 
   const byModuleName = Object.values(groupBy(results, statement => statement.moduleName))
 
-  return byModuleName.reduce((acc, curr) => {
-    const formattedSpecifiers = curr.sort(sortByOccurrences).map(stt => [stt.specifier, stt.moduleName, String(stt.occurrences)])
+  return byModuleName.reduce(
+    (acc, curr) => {
+      const formattedSpecifiers = curr
+        .sort(sortByOccurrences)
+        .map(stt => [stt.specifier, stt.moduleName, String(stt.occurrences)])
 
-    return [...acc, ...formattedSpecifiers]
-  }, [columnsName])
+      return [...acc, ...formattedSpecifiers]
+    },
+    [columnsName]
+  )
 }
 
 export default {
@@ -41,7 +48,10 @@ export default {
 
     if (!currentProjectPackage) throw print.error('no package.json file found.')
 
-    const installedPackages = [...Object.keys(currentProjectPackage.dependencies), ...Object.keys(currentProjectPackage.devDependencies)]
+    const installedPackages = [
+      ...Object.keys(currentProjectPackage.dependencies),
+      ...Object.keys(currentProjectPackage.devDependencies)
+    ]
 
     const globFiles = await glob('**/*.{ts,tsx}', {
       ignore: ['node_modules/**', '**/*.{spec,test}.{ts,tsx}', '**/*.d.ts']
@@ -50,19 +60,21 @@ export default {
     print.info(`Found ${globFiles.length} files... Starting analysis`)
     const spinner = print.spin()
 
-    const analysisErrors = []  
-    const analysisResult = await Promise.all(globFiles.flatMap(file => {
-      try {
-        return inspectModule(filesystem.read(file) || '', { modulesFilter: installedPackages })
-      } catch (error) {
-        analysisErrors.push({ 
-          file,
-          error
-        })
+    const analysisErrors = []
+    const analysisResult = await Promise.all(
+      globFiles.flatMap(file => {
+        try {
+          return inspectModule(filesystem.read(file) || '', { modulesFilter: installedPackages })
+        } catch (error) {
+          analysisErrors.push({
+            file,
+            error
+          })
 
-        return []
-      }
-    }))
+          return []
+        }
+      })
+    )
     const cleanAnalysisResult = analysisResult.flat()
     const resultsWithOccurrences = withOccurrences(cleanAnalysisResult)
 

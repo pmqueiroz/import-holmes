@@ -13,17 +13,19 @@ const filterBySpecifiers = curry((specifiers: string[], statements: ImportHolmes
 
 /**
  * @todo fix this type
-*/
+ */
 const optionFilterMap: Record<keyof FilterOptions, typeof filterByModuleNames> = {
   modulesFilter: filterByModuleNames,
   specifiersFilter: filterBySpecifiers
 }
 
-export const generateFilters = (options: FilterOptions): ((stt: ImportHolmesInspect[]) => ImportHolmesInspect[])[] => {
+export const generateFilters = (
+  options: FilterOptions
+): ((stt: ImportHolmesInspect[]) => ImportHolmesInspect[])[] => {
   return Object.keys(options).map(optKey => {
     const filter = optionFilterMap[optKey as keyof FilterOptions]
     const entries = [options[optKey as keyof FilterOptions]!].flat()
-      
+
     return filter(entries)
   })
 }
