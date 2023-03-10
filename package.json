@@ -14,6 +14,7 @@
     "import-holmes": "bin/import-holmes",
     "imp-hlm": "bin/import-holmes"
   },
+  "main": "build/index.js",
   "files": [
     "build",
     "LICENSE",
