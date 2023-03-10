@@ -8,7 +8,10 @@
     "skipLibCheck": true,
     "outDir": "build",
     "baseUrl": "./",
+    "declaration": true,
+    "declarationDir": "build/types",
+    "declarationMap": true
   },
   "include": ["src/**/*", "**/*.d.ts"],
-  "exclude": ["node_modules"]
+  "exclude": ["node_modules", "build"]
 }

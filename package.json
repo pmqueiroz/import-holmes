@@ -9,10 +9,17 @@
     "url": "https://github.com/pmqueiroz"
   },
   "license": "MIT",
+  "types": "./build/types",
   "bin": {
     "import-holmes": "bin/import-holmes",
     "imp-hlm": "bin/import-holmes"
   },
+  "files": [
+    "build",
+    "LICENSE",
+    "readme.md",
+    "bin"
+  ],
   "keywords": [
     "import",
     "ESlatest",
@@ -21,12 +28,6 @@
     "dependencies",
     "dependency",
     "module"
-  ],
-  "files": [
-    "build",
-    "LICENSE",
-    "readme.md",
-    "bin"
   ],
   "scripts": {
     "clean-build": "rm -rf ./build",
