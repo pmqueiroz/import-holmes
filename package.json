@@ -32,7 +32,8 @@
   "scripts": {
     "clean-build": "rm -rf ./build",
     "compile": "tsc -p .",
-    "build": "pnpm clean-build && pnpm compile"
+    "build": "pnpm clean-build && pnpm compile",
+    "lint": "eslint --ext .ts,.tsx"
   },
   "dependencies": {
     "@swc/core": "^1.3.38",
@@ -45,6 +46,9 @@
     "@types/lodash.curry": "^4.1.7",
     "@types/lodash.groupby": "^4.6.7",
     "@types/node": "^18.14.6",
+    "@typescript-eslint/eslint-plugin": "^5.54.1",
+    "@typescript-eslint/parser": "^5.54.1",
+    "eslint": "^8.35.0",
     "typescript": "^4.9.5"
   }
 }
