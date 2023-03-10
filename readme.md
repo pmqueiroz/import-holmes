@@ -28,14 +28,14 @@ npm add --location=global import-holmes
 ### Cli
 
 ```sh
-import-holmes -m react # search all imports from react library
-import-holmes -s useState # search all 'useState' specifier import
+import-holmes
 ```
-
+<!--
 | Options | Meaning |
 |---------|---------|
 | `-m`, `--module` | Filter inspection by module's name |
 | `-s`, `--specifier` | Filter inspection by specifier name |
+-->
 
 ### Core
 
