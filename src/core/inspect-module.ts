@@ -1,8 +1,8 @@
 import { parse, ParseOptions, ImportDeclaration, NamedImportSpecifier } from '@swc/core'
 
-import { getImportDeclarationsNodes } from './helpers'
+import { getImportDeclarationNodes } from '../helpers/get-import-declaration-nodes'
 import type { ImportHolmesInspect, ParseModuleOptions } from '../types'
-import { generateFilters } from './filters'
+import { generateFilters } from '../helpers/generate-filters'
 
 const parseOptions: ParseOptions = {
   syntax: 'typescript',
@@ -26,7 +26,7 @@ export const inspectModule = async (
   options: ParseModuleOptions = {}
 ): Promise<ImportHolmesInspect[]> => {
   const programAst = await parse(code, parseOptions)
-  const importNodes = getImportDeclarationsNodes(programAst)
+  const importNodes = getImportDeclarationNodes(programAst)
   const statements = getImportHolmesInspects(importNodes)
   const filters = generateFilters(options)
 

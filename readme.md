@@ -32,6 +32,8 @@ npm add --location=global import-holmes
 
 ```sh
 import-holmes
+# or
+import-holmes inspect
 ```
 <!--
 | Options | Meaning |

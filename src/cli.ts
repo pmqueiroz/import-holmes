@@ -1,5 +1,5 @@
 import { build } from 'gluegun'
-import defaultCommand from './commands/default'
+import defaultCommand from './commands/inspect'
 
 export const run = (argv: NodeJS.Process['argv']) => {
   const cli = build('import-holmes')
