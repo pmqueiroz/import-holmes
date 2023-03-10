@@ -1,5 +1,6 @@
 [peam-url]: https://pmqueiroz.com
 [src-url]: https://swc.rs/
+[issues-url]: https://github.com/pmqueiroz/import-holmes/issues
 
 ![import-holmes](./.github/brand.png)
 
@@ -8,6 +9,8 @@
 <samp> **Import Holmes** is a tool to inspect Javascript/Typescript projects imports</samp> 
 
 </div>
+
+> **Warning** this tool isn't in a stable version, check [issues][issues-url] page to check futures features and current problems
 
 ## Getting Started
 
