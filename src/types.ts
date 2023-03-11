@@ -3,6 +3,10 @@ export interface ImportHolmesInspect {
   specifier: string
 }
 
+export interface ImportHolmesInspectReferenced extends ImportHolmesInspect {
+  referenced: number
+}
+
 export interface ImportHolmesInspectWithOccur extends ImportHolmesInspect {
   occurrences: number
 }
