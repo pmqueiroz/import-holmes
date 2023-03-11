@@ -7,7 +7,7 @@ import type {
   ParseModuleOptions
 } from '../types'
 import { generateFilters } from '../helpers/generate-filters'
-import { implementReferences } from 'src/helpers/search-references'
+import { implementReferences } from '../helpers/implement-references'
 
 const parseOptions: ParseOptions = {
   syntax: 'typescript',

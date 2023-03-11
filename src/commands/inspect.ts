@@ -10,7 +10,7 @@ const sortByOccurrences = (a: ImportHolmesInspectWithOccur, b: ImportHolmesInspe
 }
 
 const generateTable = (results: ImportHolmesInspectWithOccur[]) => {
-  const columnsName = ['Specifier', 'Module', 'Occurrences']
+  const columnsName = ['Specifier', 'Module', 'Occurrences', 'Referenced']
 
   const byModuleName = Object.values(groupBy(results, statement => statement.moduleName))
 
@@ -18,7 +18,12 @@ const generateTable = (results: ImportHolmesInspectWithOccur[]) => {
     (acc, curr) => {
       const formattedSpecifiers = curr
         .sort(sortByOccurrences)
-        .map(stt => [stt.specifier, stt.moduleName, String(stt.occurrences)])
+        .map(stt => [
+          stt.specifier,
+          stt.moduleName,
+          String(stt.occurrences),
+          String(stt.occurrences)
+        ])
 
       return [...acc, ...formattedSpecifiers]
     },
