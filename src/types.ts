@@ -8,8 +8,8 @@ export interface ImportHolmesInspectWithOccur extends ImportHolmesInspect {
 }
 
 export type PrintModule = {
-  info: (message: any) => void
-  error: (message: any) => void
+  info: (message: unknown) => void
+  error: (message: unknown) => void
 }
 
 export interface ParseModuleOptions {

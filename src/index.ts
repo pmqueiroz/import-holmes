@@ -1,3 +1,1 @@
-import { inspectModule } from './core/inspect-module'
-
-export { inspectModule }
+export { inspectModule } from './core/inspect-module'

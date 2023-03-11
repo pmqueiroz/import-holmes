@@ -26,5 +26,7 @@
         "semi": ["error", "never"],
         "@typescript-eslint/no-non-null-assertion": 0,
         "prettier/prettier": ["error", {}, { "usePrettierrc": true }]
-    }
+    },
+    "ignorePatterns": ["node_modules/", "build/"]
+
 }
