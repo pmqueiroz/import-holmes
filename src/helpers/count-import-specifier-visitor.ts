@@ -8,7 +8,10 @@ export class CountImportSpecifierVisitor extends Visitor {
   constructor(specifierName: string) {
     super()
     this.specifier = specifierName
-    this.count = 0
+    /**
+     * @disclaimer starts negative to bypass import id itself
+     */
+    this.count = -1
   }
 
   visitIdentifier(id: Identifier): Identifier {
