@@ -1,7 +1,7 @@
 import { GluegunToolbox } from 'gluegun'
 import { glob } from 'glob'
 import { inspectModule } from '../core/inspect-module'
-import { ImportHolmesInspectWithOccur, InspectCommandOptions } from '../types'
+import { ConfigFileOptions, ImportHolmesInspectWithOccur, InspectCommandOptions } from '../types'
 import groupBy from 'lodash.groupby'
 import { withOccurrences } from '../helpers/with-occurrences'
 import { parseOptions } from '../helpers/parse-options'
@@ -36,7 +36,10 @@ export default {
   name: 'inspect',
   alias: 'i',
   run: async ({ print, filesystem, parameters }: GluegunToolbox) => {
-    const options = parseOptions(parameters.options as InspectCommandOptions)
+    const configFileOptions = filesystem.exists('.holmesrc.json')
+      ? (filesystem.read('.holmesrc.json', 'json') as ConfigFileOptions)
+      : undefined
+    const options = parseOptions(parameters.options as InspectCommandOptions, configFileOptions)
     const currentProjectPackage = filesystem.read('package.json', 'json')
 
     if (!currentProjectPackage) {
