@@ -1,9 +1,10 @@
 import { GluegunToolbox } from 'gluegun'
 import { glob } from 'glob'
 import { inspectModule } from '../core/inspect-module'
-import { ImportHolmesInspectWithOccur } from '../types'
+import { ImportHolmesInspectWithOccur, InspectCommandOptions } from '../types'
 import groupBy from 'lodash.groupby'
 import { withOccurrences } from '../helpers/with-occurrences'
+import { parseOptions } from '../helpers/parse-options'
 
 const sortByOccurrences = (a: ImportHolmesInspectWithOccur, b: ImportHolmesInspectWithOccur) => {
   return b.occurrences - a.occurrences
@@ -34,7 +35,8 @@ const generateTable = (results: ImportHolmesInspectWithOccur[]) => {
 export default {
   name: 'inspect',
   alias: 'i',
-  run: async ({ print, filesystem }: GluegunToolbox) => {
+  run: async ({ print, filesystem, parameters }: GluegunToolbox) => {
+    const options = parseOptions(parameters.options as InspectCommandOptions)
     const currentProjectPackage = filesystem.read('package.json', 'json')
 
     if (!currentProjectPackage) {
@@ -65,7 +67,8 @@ export default {
       globFiles.flatMap(file => {
         try {
           return inspectModule(filesystem.read(file) || '', {
-            modulesFilter: installedPackages,
+            modulesFilter: options.module || installedPackages,
+            specifiersFilter: options.specifier,
             print
           })
         } catch (error) {

@@ -22,10 +22,12 @@ const optionFilterMap: Record<keyof FilterOptions, typeof filterByModuleNames> =
 export const generateFilters = (
   options: FilterOptions
 ): ((stt: ImportHolmesInspect[]) => ImportHolmesInspect[])[] => {
-  return Object.keys(options).map(optKey => {
-    const filter = optionFilterMap[optKey as keyof FilterOptions]
-    const entries = [options[optKey as keyof FilterOptions]!].flat()
+  return Object.keys(options)
+    .filter(optKey => Boolean(options[optKey as keyof FilterOptions]))
+    .map(optKey => {
+      const filter = optionFilterMap[optKey as keyof FilterOptions]
+      const entries = [options[optKey as keyof FilterOptions]!].flat()
 
-    return filter(entries)
-  })
+      return filter(entries)
+    })
 }

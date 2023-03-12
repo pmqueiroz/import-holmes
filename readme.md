@@ -35,12 +35,12 @@ import-holmes
 # or
 import-holmes inspect
 ```
-<!--
+
 | Options | Meaning |
 |---------|---------|
 | `-m`, `--module` | Filter inspection by module's name |
 | `-s`, `--specifier` | Filter inspection by specifier name |
--->
+
 
 ### Core
 

@@ -21,3 +21,15 @@ export interface ParseModuleOptions {
   specifiersFilter?: string | string[]
   print?: PrintModule
 }
+
+export type InspectCommandOptionsShortcuts = {
+  s: string
+  m: string
+}
+
+export type InspectCommandFullOptions = {
+  specifier: string
+  module: string
+}
+
+export type InspectCommandOptions = InspectCommandOptionsShortcuts & InspectCommandFullOptions
