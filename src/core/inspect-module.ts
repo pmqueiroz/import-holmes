@@ -1,8 +1,13 @@
-import { parse, ParseOptions, ImportDeclaration, NamedImportSpecifier } from '@swc/core'
+import { parse, ParseOptions, ImportDeclaration, NamedImportSpecifier, Module } from '@swc/core'
 
 import { getImportDeclarationNodes } from '../helpers/get-import-declaration-nodes'
-import type { ImportHolmesInspect, ParseModuleOptions } from '../types'
+import type {
+  ImportHolmesInspect,
+  ImportHolmesInspectReferenced,
+  ParseModuleOptions
+} from '../types'
 import { generateFilters } from '../helpers/generate-filters'
+import { implementReferences } from '../helpers/implement-references'
 
 const parseOptions: ParseOptions = {
   syntax: 'typescript',
@@ -24,8 +29,8 @@ const getImportHolmesInspects = (nodes: ImportDeclaration[]) =>
 export const inspectModule = async (
   code: string,
   { print = console, ...restOptions }: ParseModuleOptions = {}
-): Promise<ImportHolmesInspect[]> => {
-  let programAst
+): Promise<ImportHolmesInspectReferenced[]> => {
+  let programAst: Module
   try {
     programAst = await parse(code, parseOptions)
   } catch (error) {
@@ -36,10 +41,10 @@ export const inspectModule = async (
     return []
   }
   const importNodes = getImportDeclarationNodes(programAst)
+
   const statements = getImportHolmesInspects(importNodes)
   const filters = generateFilters(restOptions)
-
-  return filters.reduce((acc, currFilter) => {
-    return currFilter(acc)
-  }, statements)
+  const filteredStatements = filters.reduce((acc, currFilter) => currFilter(acc), statements)
+  const withReferencesCount = filteredStatements.map(stt => implementReferences(stt, programAst))
+  return withReferencesCount
 }
