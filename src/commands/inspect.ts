@@ -22,7 +22,7 @@ const generateTable = (results: ImportHolmesInspectWithOccur[]) => {
           stt.specifier,
           stt.moduleName,
           String(stt.occurrences),
-          String(stt.occurrences)
+          String(stt.referenced)
         ])
 
       return [...acc, ...formattedSpecifiers]
