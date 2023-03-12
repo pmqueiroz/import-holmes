@@ -33,7 +33,7 @@ export const inspectModule = async (
     print.error(`error while parsing file <${fileName || 'x'}>`)
     return []
   }
-  const importNodes = getImportDeclarationNodes(programAst)
+  const importNodes = getImportDeclarationNodes(programAst.body)
 
   const statements = getImportHolmesInspects(importNodes)
   const filters = generateFilters(restOptions)
