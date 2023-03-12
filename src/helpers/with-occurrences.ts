@@ -1,6 +1,6 @@
-import { ImportHolmesInspectReferenced, ImportHolmesInspectWithOccur } from '../types'
+import { ImportHolmesInspect, ImportHolmesInspectWithOccur } from '../types'
 
-export const withOccurrences = (results: ImportHolmesInspectReferenced[]) => {
+export const withOccurrences = (results: ImportHolmesInspect[]) => {
   return results.reduce((acc, curr) => {
     const repeated = acc.find(
       item => item.moduleName === curr.moduleName && item.specifier === curr.specifier

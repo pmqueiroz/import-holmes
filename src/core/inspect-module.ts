@@ -1,11 +1,7 @@
 import { parse, ParseOptions, ImportDeclaration, NamedImportSpecifier, Module } from '@swc/core'
 
 import { getImportDeclarationNodes } from '../helpers/get-import-declaration-nodes'
-import type {
-  ImportHolmesInspect,
-  ImportHolmesInspectReferenced,
-  ParseModuleOptions
-} from '../types'
+import type { ImportHolmesInspect, ParseModuleOptions } from '../types'
 import { generateFilters } from '../helpers/generate-filters'
 import { implementReferences } from '../helpers/implement-references'
 
@@ -16,7 +12,7 @@ const defaultParseConfig: ParseOptions = {
 
 const getImportHolmesInspects = (nodes: ImportDeclaration[]) =>
   nodes.reduce((acc, curr) => {
-    const statements: ImportHolmesInspect[] = curr.specifiers.map(specifier => {
+    const statements: Omit<ImportHolmesInspect, 'referenced'>[] = curr.specifiers.map(specifier => {
       return {
         specifier: (specifier as NamedImportSpecifier).imported?.value || specifier.local.value,
         moduleName: String(curr.source.value) || ''
@@ -24,12 +20,12 @@ const getImportHolmesInspects = (nodes: ImportDeclaration[]) =>
     })
 
     return [...acc, ...statements]
-  }, [] as ImportHolmesInspect[])
+  }, [] as Omit<ImportHolmesInspect, 'referenced'>[])
 
 export const inspectModule = async (
   code: string,
   { print = console, fileName, parseConfig, ...restOptions }: ParseModuleOptions = {}
-): Promise<ImportHolmesInspectReferenced[]> => {
+): Promise<ImportHolmesInspect[]> => {
   let programAst: Module
   try {
     programAst = await parse(code, Object.assign(defaultParseConfig, parseConfig))

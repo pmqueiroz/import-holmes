@@ -3,13 +3,10 @@ import { ParserConfig } from '@swc/core'
 export interface ImportHolmesInspect {
   moduleName: string
   specifier: string
-}
-
-export interface ImportHolmesInspectReferenced extends ImportHolmesInspect {
   referenced: number
 }
 
-export interface ImportHolmesInspectWithOccur extends ImportHolmesInspectReferenced {
+export interface ImportHolmesInspectWithOccur extends ImportHolmesInspect {
   occurrences: number
 }
 
