@@ -64,16 +64,17 @@ export default {
      */
     const analysisErrors = []
     const analysisResult = await Promise.all(
-      globFiles.flatMap(file => {
+      globFiles.flatMap(fileName => {
         try {
-          return inspectModule(filesystem.read(file) || '', {
+          return inspectModule(filesystem.read(fileName) || '', {
             modulesFilter: options.module || installedPackages,
             specifiersFilter: options.specifier,
+            fileName,
             print
           })
         } catch (error) {
           analysisErrors.push({
-            file,
+            fileName,
             error
           })
 

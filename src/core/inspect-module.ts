@@ -28,7 +28,7 @@ const getImportHolmesInspects = (nodes: ImportDeclaration[]) =>
 
 export const inspectModule = async (
   code: string,
-  { print = console, ...restOptions }: ParseModuleOptions = {}
+  { print = console, fileName, ...restOptions }: ParseModuleOptions = {}
 ): Promise<ImportHolmesInspectReferenced[]> => {
   let programAst: Module
   try {
@@ -37,7 +37,7 @@ export const inspectModule = async (
     /**
      * @todo track file name
      */
-    print.error('error while parsing file <x>')
+    print.error(`error while parsing file <${fileName || 'x'}>`)
     return []
   }
   const importNodes = getImportDeclarationNodes(programAst)
