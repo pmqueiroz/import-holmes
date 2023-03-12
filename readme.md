@@ -42,6 +42,23 @@ import-holmes inspect
 | `-s`, `--specifier` | `undefined` | Filter inspection by specifier name |
 | `-g`, `--glob` | `**/*.{ts,tsx}` | Glob to select files to inspect |
 
+#### Config File
+
+For better configuring you can also set a config file named `.holmesrc.json` following this pattern:
+
+```json
+// .holmesrc.json
+{
+  "module": "some-module", // you can pass string[] as well
+  "specifier": ["first", "second"], // you can pass a sting
+  "glob": "**/*.{ts,tsx}",
+  "globIgnore": ["node_modules/**", "**/*.{spec,test}.{ts,tsx}", "**/*.d.ts"],
+  "parseConfig": { // refer to https://swc.rs/docs/usage/core#parse
+    "syntax": "typescript",
+    "tsx": true
+  }
+}
+```
 
 ### Core
 
