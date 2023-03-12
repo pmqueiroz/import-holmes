@@ -1,8 +1,9 @@
 import {
   InspectCommandOptions,
   InspectCommandFullOptions,
-  InspectCommandOptionsShortcuts
-} from 'src/types'
+  InspectCommandOptionsShortcuts,
+  ConfigFileOptions
+} from '../types'
 
 const optionsShortcuts: Record<
   keyof InspectCommandOptionsShortcuts,
@@ -13,7 +14,10 @@ const optionsShortcuts: Record<
   g: 'glob'
 }
 
-export const parseOptions = (options: InspectCommandOptions) => {
+export const parseOptions = (
+  options: InspectCommandOptions,
+  ConfigFileOptions: Partial<ConfigFileOptions> = {}
+) => {
   const parsedOptions: Partial<InspectCommandFullOptions> = {}
 
   for (const key in options) {
@@ -27,5 +31,5 @@ export const parseOptions = (options: InspectCommandOptions) => {
     }
   }
 
-  return parsedOptions
+  return Object.assign(ConfigFileOptions, parsedOptions)
 }

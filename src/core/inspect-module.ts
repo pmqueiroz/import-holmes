@@ -9,7 +9,7 @@ import type {
 import { generateFilters } from '../helpers/generate-filters'
 import { implementReferences } from '../helpers/implement-references'
 
-const parseOptions: ParseOptions = {
+const defaultParseConfig: ParseOptions = {
   syntax: 'typescript',
   tsx: true
 }
@@ -28,11 +28,11 @@ const getImportHolmesInspects = (nodes: ImportDeclaration[]) =>
 
 export const inspectModule = async (
   code: string,
-  { print = console, fileName, ...restOptions }: ParseModuleOptions = {}
+  { print = console, fileName, parseConfig, ...restOptions }: ParseModuleOptions = {}
 ): Promise<ImportHolmesInspectReferenced[]> => {
   let programAst: Module
   try {
-    programAst = await parse(code, parseOptions)
+    programAst = await parse(code, Object.assign(defaultParseConfig, parseConfig))
   } catch (error) {
     /**
      * @todo track file name

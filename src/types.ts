@@ -1,3 +1,5 @@
+import { ParserConfig } from '@swc/core'
+
 export interface ImportHolmesInspect {
   moduleName: string
   specifier: string
@@ -20,6 +22,7 @@ export interface ParseModuleOptions {
   fileName?: string
   modulesFilter?: string | string[]
   specifiersFilter?: string | string[]
+  parseConfig?: ParserConfig
   print?: PrintModule
 }
 
@@ -36,3 +39,11 @@ export type InspectCommandFullOptions = {
 }
 
 export type InspectCommandOptions = InspectCommandOptionsShortcuts & InspectCommandFullOptions
+
+export type ConfigFileOptions = {
+  module: string | string[]
+  specifier: string | string[]
+  glob: string
+  globIgnore: string[]
+  parseConfig?: ParserConfig
+}
