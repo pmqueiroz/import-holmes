@@ -1,4 +1,4 @@
-import { MockAstGenerator } from '../scaffold/swc'
+import { MockAstGenerator } from '../scaffold/swc.mock'
 import { getImportDeclarationNodes } from './get-import-declaration-nodes'
 
 describe('getImportDeclarationNodes', () => {
