@@ -1,6 +1,6 @@
 {
   "name": "import-holmes",
-  "version": "0.1.1",
+  "version": "0.2.0",
   "description": "A tool to inspect Javascript/Typescript projects imports",
   "repository": "git://github.com/pmqueiroz/import-holmes",
   "homepage": "https://github.com/pmqueiroz/import-holmes",
