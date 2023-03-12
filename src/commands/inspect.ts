@@ -53,10 +53,7 @@ export default {
     ]
 
     const globFiles = await glob(options.glob || '**/*.{ts,tsx}', {
-      /**
-       * @todo add an option to increment these
-       */
-      ignore: ['node_modules/**', '**/*.{spec,test}.{ts,tsx}', '**/*.d.ts']
+      ignore: options.globIgnore || ['node_modules/**', '**/*.{spec,test}.{ts,tsx}', '**/*.d.ts']
     })
 
     print.info(`Found ${globFiles.length} files... Starting analysis`)
@@ -73,6 +70,7 @@ export default {
             modulesFilter: options.module || installedPackages,
             specifiersFilter: options.specifier,
             fileName,
+            parseConfig: options.parseConfig,
             print
           })
         } catch (error) {

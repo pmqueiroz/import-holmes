@@ -22,6 +22,7 @@ export interface ParseModuleOptions {
   fileName?: string
   modulesFilter?: string | string[]
   specifiersFilter?: string | string[]
+  parseConfig?: ParserConfig
   print?: PrintModule
 }
 
@@ -44,5 +45,5 @@ export type ConfigFileOptions = {
   specifier: string | string[]
   glob: string
   globIgnore: string[]
-  parseConfig: ParserConfig
+  parseConfig?: ParserConfig
 }
