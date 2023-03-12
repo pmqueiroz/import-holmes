@@ -66,17 +66,13 @@ export default {
     const analysisResult = await Promise.all(
       globFiles.flatMap(async fileName => {
         try {
-          const a = await inspectModule(filesystem.read(fileName) || '', {
+          return inspectModule(filesystem.read(fileName) || '', {
             modulesFilter: options.module || installedPackages,
             specifiersFilter: options.specifier,
             fileName,
             parseConfig: options.parseConfig,
             print
           })
-
-          console.log(a)
-
-          return a
         } catch (error) {
           analysisErrors.push({
             fileName,
