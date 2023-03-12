@@ -26,11 +26,13 @@ export interface ParseModuleOptions {
 export type InspectCommandOptionsShortcuts = {
   s: string
   m: string
+  g: string
 }
 
 export type InspectCommandFullOptions = {
   specifier: string
   module: string
+  glob: string
 }
 
 export type InspectCommandOptions = InspectCommandOptionsShortcuts & InspectCommandFullOptions

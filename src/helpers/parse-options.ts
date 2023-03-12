@@ -9,7 +9,8 @@ const optionsShortcuts: Record<
   keyof InspectCommandFullOptions
 > = {
   s: 'specifier',
-  m: 'module'
+  m: 'module',
+  g: 'glob'
 }
 
 export const parseOptions = (options: InspectCommandOptions) => {
