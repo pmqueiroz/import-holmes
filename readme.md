@@ -36,10 +36,11 @@ import-holmes
 import-holmes inspect
 ```
 
-| Options | Meaning |
-|---------|---------|
-| `-m`, `--module` | Filter inspection by module's name |
-| `-s`, `--specifier` | Filter inspection by specifier name |
+| Options | Default | Meaning |
+|---------|---------|---------|
+| `-m`, `--module` | all `dependencies` and `devDependencies` | Filter inspection by module's name |
+| `-s`, `--specifier` | `undefined` | Filter inspection by specifier name |
+| `-g`, `--glob` | `**/*.{ts,tsx}` | Glob to select files to inspect |
 
 
 ### Core

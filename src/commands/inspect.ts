@@ -49,11 +49,11 @@ export default {
       ...Object.keys(currentProjectPackage.devDependencies || [])
     ]
 
-    const globFiles = await glob('**/*.{js,jsx,ts,tsx}', {
+    const globFiles = await glob(options.glob || '**/*.{ts,tsx}', {
       /**
        * @todo add an option to increment these
        */
-      ignore: ['node_modules/**', '**/*.{spec,test}.{js,jsx,ts,tsx}', '**/*.d.ts']
+      ignore: ['node_modules/**', '**/*.{spec,test}.{ts,tsx}', '**/*.d.ts']
     })
 
     print.info(`Found ${globFiles.length} files... Starting analysis`)
