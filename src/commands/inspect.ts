@@ -67,7 +67,7 @@ export default {
       globFiles.flatMap(file => {
         try {
           return inspectModule(filesystem.read(file) || '', {
-            modulesFilter: installedPackages,
+            modulesFilter: options.module || installedPackages,
             print
           })
         } catch (error) {

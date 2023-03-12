@@ -13,7 +13,7 @@ const optionsShortcuts: Record<
 }
 
 export const parseOptions = (options: InspectCommandOptions) => {
-  const parsedOptions: Partial<InspectCommandOptions> = {}
+  const parsedOptions: Partial<InspectCommandFullOptions> = {}
 
   for (const key in options) {
     if (Object.keys(optionsShortcuts).includes(key)) {
