@@ -68,6 +68,7 @@ export default {
         try {
           return inspectModule(filesystem.read(file) || '', {
             modulesFilter: options.module || installedPackages,
+            specifiersFilter: options.specifier,
             print
           })
         } catch (error) {
