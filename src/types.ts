@@ -17,6 +17,7 @@ export type PrintModule = {
 }
 
 export interface ParseModuleOptions {
+  fileName?: string
   modulesFilter?: string | string[]
   specifiersFilter?: string | string[]
   print?: PrintModule
