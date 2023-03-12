@@ -34,9 +34,6 @@ export const inspectModule = async (
   try {
     programAst = await parse(code, Object.assign(defaultParseConfig, parseConfig))
   } catch (error) {
-    /**
-     * @todo track file name
-     */
     print.error(`error while parsing file <${fileName || 'x'}>`)
     return []
   }
