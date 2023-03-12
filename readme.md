@@ -46,7 +46,7 @@ import-holmes inspect
 
 For better configuring you can also set a config file named `.holmesrc.json` following this pattern:
 
-```json
+```jsonc
 // .holmesrc.json
 {
   "module": "some-module", // you can pass string[] as well
