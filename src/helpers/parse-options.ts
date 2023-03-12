@@ -15,7 +15,7 @@ const optionsShortcuts: Record<
 }
 
 export const parseOptions = (
-  options: InspectCommandOptions,
+  options: Partial<InspectCommandOptions>,
   ConfigFileOptions: Partial<ConfigFileOptions> = {}
 ) => {
   const parsedOptions: Partial<InspectCommandFullOptions> = {}
