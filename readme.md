@@ -49,6 +49,7 @@ For better configuring you can also set a config file named `.holmesrc.json` fol
 ```jsonc
 // .holmesrc.json
 {
+  "$schema": "https://raw.githubusercontent.com/pmqueiroz/import-holmes/main/schema.json",
   "module": "some-module", // you can pass string[] as well
   "specifier": ["first", "second"], // you can pass a sting
   "glob": "**/*.{ts,tsx}",
