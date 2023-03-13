@@ -49,6 +49,7 @@ For better configuring you can also set a config file named `.holmesrc.json` fol
 ```jsonc
 // .holmesrc.json
 {
+  "$schema": "https://raw.githubusercontent.com/pmqueiroz/import-holmes/main/schema.json",
   "module": "some-module", // you can pass string[] as well
   "specifier": ["first", "second"], // you can pass a sting
   "glob": "**/*.{ts,tsx}",
@@ -72,26 +73,34 @@ inspects a typescript/javascript module searching for import declarations and re
 import { inspectModule } from 'import-holmes'
 
 const someCode = `\
-import a from 'b'
+import A from 'b'
 import { c } from 'd'
 import { e as f } from 'g'
+
+new A()
+
+c()
+
+const h = f
 `
 
 const inspect = inspectModule(someCode)
 
 // outputs
 [
-  { specifier: 'a', moduleName: 'b' },
-  { specifier: 'c', moduleName: 'd' },
-  { specifier: 'e', moduleName: 'g' }
+  { specifier: 'A', moduleName: 'b', referenced: 1 },
+  { specifier: 'c', moduleName: 'd', referenced: 1 },
+  { specifier: 'e', moduleName: 'g', referenced: 1 }
 ]
 ```
 There are some available options in inspect module
 
 ```ts
 inspectModule('source code', {
+   filename?: string
    modulesFilter?: string | string[]
    specifiersFilter?: string | string[]
+   parseConfig?: ParserConfig // refer to https://swc.rs/docs/usage/core#parse
 })
 ```
 
