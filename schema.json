@@ -1,0 +1,45 @@
+{
+   "$schema": "http://json-schema.org/draft-07/schema#",
+   "type": "object",
+   "properties": {
+      "module": {
+         "oneOf": [
+            {
+               "type": "string"
+            },
+            {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               },
+               "minItems": 1
+            }
+         ]
+      },
+      "specifier": {
+         "oneOf": [
+            {
+               "type": "string"
+            },
+            {
+               "type": "array",
+               "items": {
+                  "type": "string"
+               },
+               "minItems": 1
+            }
+         ]
+      },
+      "glob": {
+         "type": "string",
+         "pattern": "^((?!\\!\\(|\\)|\\!\\(|\\)).)*$"
+      },
+      "globIgnore": {
+         "type": "array",
+         "items": {
+            "type": "string"
+         }
+      },
+      "parseConfig": {}
+   }
+}
