@@ -95,6 +95,10 @@ inspectModule('source code', {
 })
 ```
 
+### known Issues
+
+Referenced column may not work well with some typings, such as type referenced in union type
+
 <div align="center">
 
 <samp>Made with :heart: by [**Peam**][peam-url]</samp> 
