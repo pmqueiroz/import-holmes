@@ -5,6 +5,7 @@ import { ConfigFileOptions, ImportHolmesInspectWithOccur, InspectCommandOptions 
 import groupBy from 'lodash.groupby'
 import { withOccurrences } from '../helpers/with-occurrences'
 import { parseOptions } from '../helpers/parse-options'
+import { InspectError } from '..//core/inspect-error'
 
 const sortByOccurrences = (a: ImportHolmesInspectWithOccur, b: ImportHolmesInspectWithOccur) => {
   return b.occurrences - a.occurrences
@@ -35,7 +36,8 @@ const generateTable = (results: ImportHolmesInspectWithOccur[]) => {
 export default {
   name: 'inspect',
   alias: 'i',
-  run: async ({ print, filesystem, parameters }: GluegunToolbox) => {
+  run: async (toolbox: GluegunToolbox) => {
+    const { print, filesystem, parameters } = toolbox
     const configFileOptions = filesystem.exists('.holmesrc.json')
       ? (filesystem.read('.holmesrc.json', 'json') as ConfigFileOptions)
       : undefined
@@ -62,24 +64,26 @@ export default {
     /**
      * @todo create analysis error handler
      */
-    const analysisErrors = []
+    const analysisErrors: InspectError[] = []
     const analysisResult = await Promise.all(
-      globFiles.flatMap(fileName => {
+      globFiles.flatMap(async filename => {
         try {
-          return inspectModule(filesystem.read(fileName) || '', {
+          return await inspectModule(filesystem.read(filename) || '', {
             modulesFilter: options.module || installedPackages,
             specifiersFilter: options.specifier,
-            fileName,
-            parseConfig: options.parseConfig,
-            print
+            filename,
+            parseConfig: options.parseConfig
           })
         } catch (error) {
-          analysisErrors.push({
-            fileName,
-            error
-          })
+          if (InspectError.isInspectError(error)) {
+            analysisErrors.push(error)
 
-          return []
+            return []
+          }
+
+          print.error('something went wrong')
+          print.printHelp(toolbox)
+          process.exit(1)
         }
       })
     )

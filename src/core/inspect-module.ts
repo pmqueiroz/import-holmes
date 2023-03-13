@@ -4,6 +4,7 @@ import { getImportDeclarationNodes } from '../helpers/get-import-declaration-nod
 import type { ImportHolmesInspect, ParseModuleOptions } from '../types'
 import { generateFilters } from '../helpers/generate-filters'
 import { implementReferences } from '../helpers/implement-references'
+import { InspectError } from './inspect-error'
 
 const defaultParseConfig: ParseOptions = {
   syntax: 'typescript',
@@ -24,14 +25,14 @@ const getImportHolmesInspects = (nodes: ImportDeclaration[]) =>
 
 export const inspectModule = async (
   code: string,
-  { print = console, fileName, parseConfig, ...restOptions }: ParseModuleOptions = {}
+  { filename = 'unknown', parseConfig, ...restOptions }: ParseModuleOptions = {}
 ): Promise<ImportHolmesInspect[]> => {
   let programAst: Module
   try {
     programAst = await parse(code, Object.assign(defaultParseConfig, parseConfig))
-  } catch (error) {
-    print.error(`error while parsing file <${fileName || 'x'}>`)
-    return []
+  } catch (err) {
+    const error = err as Error
+    throw new InspectError({ filename, error })
   }
   const importNodes = getImportDeclarationNodes(programAst.body)
 
