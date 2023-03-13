@@ -64,9 +64,9 @@ export default {
      */
     const analysisErrors = []
     const analysisResult = await Promise.all(
-      globFiles.flatMap(fileName => {
+      globFiles.flatMap(async fileName => {
         try {
-          return inspectModule(filesystem.read(fileName) || '', {
+          return await inspectModule(filesystem.read(fileName) || '', {
             modulesFilter: options.module || installedPackages,
             specifiersFilter: options.specifier,
             fileName,
