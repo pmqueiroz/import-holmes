@@ -10,17 +10,11 @@ export interface ImportHolmesInspectWithOccur extends ImportHolmesInspect {
   occurrences: number
 }
 
-export type PrintModule = {
-  info: (message: unknown) => void
-  error: (message: unknown) => void
-}
-
 export interface ParseModuleOptions {
-  fileName?: string
+  filename?: string
   modulesFilter?: string | string[]
   specifiersFilter?: string | string[]
   parseConfig?: ParserConfig
-  print?: PrintModule
 }
 
 export type InspectCommandOptionsShortcuts = {
