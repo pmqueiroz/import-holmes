@@ -15,7 +15,6 @@ impl Visit for ImportVisitor {
     }
 }
 
-
 pub fn get_import_decl(program: Program) -> Vec<ImportDecl> {
    let mut visitor = ImportVisitor {
       imports: Vec::new()
