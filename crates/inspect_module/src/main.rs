@@ -5,7 +5,6 @@ extern crate swc_ecma_visit;
 
 mod parser;
 mod visitor;
-mod inspect;
 
 fn main() {
     let source_code = r#"
@@ -15,8 +14,7 @@ fn main() {
     "#;
 
     let program = parser::parse_program(source_code);
-    let imports = visitor::get_import_decl(program);
-    let inspects = inspect::generate_inspects(&imports);
+    let inspects = visitor::get_program_inspects(program);
     
     for inspect in inspects {
         println!("specifier: {} module_name: {}", inspect.specifier, inspect.module_name);
