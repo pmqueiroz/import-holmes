@@ -1,0 +1,13 @@
+[package]
+name          = "inspect_module"
+license       = "MIT"
+repository    = "https://github.com/pmqueiroz/import-holmes.git"
+version       = "0.1.0"
+
+[dependencies]
+swc_common = "0.29.37"
+swc_core = "0.69.11"
+swc_ecma_ast = "0.100.1"
+swc_ecma_parser = "0.130.3"
+swc_ecma_visit = "0.86.1"
+swc_ecmascript = "0.222.8"
