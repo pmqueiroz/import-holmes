@@ -1,0 +1,8 @@
+{
+   "dependencies": {
+      "cleiton": "salve"
+   },
+   "devDependencies": {
+      "salve": "cleiton"
+   }
+}

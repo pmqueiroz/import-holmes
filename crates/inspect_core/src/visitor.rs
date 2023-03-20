@@ -8,11 +8,13 @@ pub struct RawInspect {
    pub module_name: String
 }
 
+#[derive(Debug)]
 pub struct  Inspect {
     pub raw: RawInspect,
     pub referenced: usize
 }
 
+#[derive(Debug)]
 struct ImportVisitor {
     raw_inspects: Vec<RawInspect>,
     reference_counts: HashMap<String, usize>

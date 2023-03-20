@@ -1,0 +1,12 @@
+[package]
+name = "inspect_cli"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+clap = { version = "4.1.11", features = ["derive"] }
+glob = "0.3.1"
+inspect_core = { version = "0.1.0", path = "../inspect_core" }
+rayon = "1.7.0"
+serde = "1.0.158"
+serde_json = "1.0.94"
