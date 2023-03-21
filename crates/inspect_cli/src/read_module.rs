@@ -1,8 +1,9 @@
+extern crate globwalk;
+
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::path::PathBuf;
 use std::collections::HashMap;
-use glob::{glob_with, MatchOptions};
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Package {
@@ -21,15 +22,17 @@ pub fn read_package_json(cwd: PathBuf) -> Package {
    data
 }
 
-pub fn get_module_files() -> Vec<PathBuf> {
-   let options = MatchOptions {
-      case_sensitive: true,
-      require_literal_separator: true,
-      ..Default::default()
-   };
+pub fn get_module_files(arg_glob: Option<String>) -> Vec<String> {
+   let mut paths: Vec<String> = Vec::new();
+   let glob_pattern = arg_glob.unwrap_or("**/*.{ts,tsx}".to_string());
 
-   // build glob patterns based on options
-   let paths: Vec<PathBuf> = glob_with("**/*.ts", options).unwrap().filter_map(Result::ok).collect();
+   let glob_paths = globwalk::glob(glob_pattern).unwrap().filter_map(Result::ok);
+
+   for path in glob_paths {
+      if let Some(pathname) = path.path().to_str() {
+         paths.push(pathname.to_string());
+      }
+   }
 
    paths
 }

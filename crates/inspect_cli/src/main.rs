@@ -1,40 +1,36 @@
 use inspect_core::inspect_module;
 use clap::Parser;
+use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use std::env;
+use std::fs;
 
 mod read_module;
 
 #[derive(Parser, Debug)]
 struct Args {
-    #[arg(short = 'm', long = "module")]
-    module: Option<String>,
+    #[arg(short = 'g', long = "glob")]
+    glob: Option<String>,
 }
 
 fn main() {
     let args = Args::parse();
-
-    println!("{:#?}", args);
-
     let cwd = env::current_dir().unwrap();
-
-    let package = read_module::read_package_json(cwd);
-
-    println!("{:#?}", package);
+    // implement module filter in core
+    let _package = read_module::read_package_json(cwd);
     
-    let files = read_module::get_module_files();
-    println!("{:#?}", files);
+    let files = read_module::get_module_files(args.glob);
 
-    let source_code = r#"
-        import { useState } from 'react'
-        import React from 'react'
-        import { useRef as useCleiton } from 'react' 
+    let inspects: Vec<inspect_core::Inspect> = files
+        .par_iter()
+        .map(|path| {
+            let contents = fs::read_to_string(path)
+                .expect("Should have been able to read the file");
 
-        const cleiton = () => {
-            const [catapimbas, cataporas] = useState()
-        }
-    "#;
+            inspect_module(&contents)
+        })
+        .flatten()
+        .collect();
 
-    let inspects = inspect_module(source_code);
 
     println!("{:#?}", inspects);
 }
