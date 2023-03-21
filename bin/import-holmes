@@ -1,11 +1,22 @@
 #!/usr/bin/env node
 
-var devMode = require('fs').existsSync(`${__dirname}/../src`)
-var wantsCompiled = process.argv.indexOf('--compiled-build') >= 0
+var legacyCli = process.argv.indexOf('--legacy') >= 0
 
-if (wantsCompiled || !devMode) {
+if (legacyCli) {
   require(`${__dirname}/../build/cli`).run(process.argv)
 } else {
-  require('ts-node').register({ project: `${__dirname}/../tsconfig.json` })
-  require(`${__dirname}/../src/cli`).run(process.argv)
+  const { spawn } = require('child_process');
+  
+  const rustBinary = spawn('./inspect-rs-cli', process.argv.slice(2));
+  
+  rustBinary.stdout.pipe(process.stdout);
+  rustBinary.stderr.pipe(process.stderr);
+
+  rustBinary.on('error', (err) => {
+    console.error('Internal error; consider running with --legacy flag')
+
+    console.error(err)
+  });
+
+  rustBinary.on('close', process.exit);
 }

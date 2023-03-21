@@ -11,8 +11,7 @@
   "license": "MIT",
   "types": "./build/types",
   "bin": {
-    "import-holmes": "bin/import-holmes",
-    "imp-hlm": "bin/import-holmes"
+    "import-holmes": "bin/import-holmes"
   },
   "main": "build/index.js",
   "files": [
@@ -43,7 +42,8 @@
     "compile": "tsc -p .",
     "build": "pnpm clean-build && pnpm compile",
     "lint": "eslint --ext .ts,.tsx",
-    "test": "jest"
+    "test": "jest",
+    "build-rs-cli": "./build-rs-cli.sh"
   },
   "dependencies": {
     "@swc/core": "^1.3.40",
