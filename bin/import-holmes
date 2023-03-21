@@ -1,13 +1,34 @@
 #!/usr/bin/env node
+const { existsSync } = require('fs');
+const { join } = require('path')
 
-var legacyCli = process.argv.indexOf('--legacy') >= 0
+var rsCliPath = join(__dirname, "inspect-cli-rs");
 
-if (legacyCli) {
-  require(`${__dirname}/../build/cli`).run(process.argv)
+var legacyCli = process.argv.indexOf('--legacy') >= 0;
+var rsCliExists = existsSync(rsCliPath);
+
+if (legacyCli || !rsCliExists) {
+  legacyRun();
 } else {
+  run();
+}
+
+function legacyRun() {
+  var devMode = require('fs').existsSync(`${__dirname}/../src`)
+  var wantsCompiled = process.argv.indexOf('--compiled-build') >= 0
+
+  if (wantsCompiled || !devMode) {
+    require(`${__dirname}/../build/cli`).run(process.argv)
+  } else {
+    require('ts-node').register({ project: `${__dirname}/../tsconfig.json` })
+    require(`${__dirname}/../src/cli`).run(process.argv)
+  }
+}
+
+function run() {
   const { spawn } = require('child_process');
   
-  const rustBinary = spawn('./inspect-rs-cli', process.argv.slice(2));
+  const rustBinary = spawn(rsCliPath, process.argv.slice(2));
   
   rustBinary.stdout.pipe(process.stdout);
   rustBinary.stderr.pipe(process.stderr);
