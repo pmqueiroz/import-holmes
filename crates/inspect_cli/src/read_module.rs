@@ -12,6 +12,11 @@ pub struct Package {
    pub dev_dependencies: HashMap<String, String>
 }
 
+pub fn package_exists(dir_path: &PathBuf) -> bool {
+   let package_json_path = dir_path.join("package.json");
+   package_json_path.exists()
+}
+
 pub fn read_package_json(cwd: &PathBuf) -> Package {
    let file_path = cwd.join("package.json");
 
@@ -49,7 +54,6 @@ pub fn get_module_files(cwd: &PathBuf, arg_glob: Option<String>) -> Vec<String> 
       .into_iter()
       .filter_map(Result::ok)
       .collect(); 
-
 
    for path in glob_paths {
       if let Some(pathname) = path.path().to_str() {
