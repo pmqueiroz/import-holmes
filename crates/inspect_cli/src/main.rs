@@ -17,12 +17,15 @@ struct Args{
     path: Option<String>,
     #[arg(long = "sort", default_value = "none")]
     sort_strategy: String,
+    #[arg(short = 'm', long = "module")]
+    filter_module: Option<String>,
 }
 
 fn main() {
     let args = Args::parse();
     let path = resolve_path(args.path);
     let sort_strategy = resolve_sort_strategy(args.sort_strategy);
+    let arg_module_filter = resolve_module_filter(args.filter_module);
 
     if !path.exists() {
         let exit_message = format!("Path {} does not exist", path.display());
@@ -34,9 +37,9 @@ fn main() {
         log::fatal(&exit_message, Some(1));
     }
 
-    // implement module filter in core
-    let _package = read_module::read_package_json(&path);
-    
+    let package = read_module::read_package_json(&path);
+    let dependencies = package.dependencies.keys().cloned().collect::<Vec<String>>();
+    let module_names_to_check = arg_module_filter.unwrap_or(dependencies);
     let files = read_module::get_module_files(&path, args.glob);
 
     let inspects: Vec<inspect_core::Inspect> = files
@@ -47,12 +50,22 @@ fn main() {
             inspect_module(&contents)
         })
         .flatten()
+        .filter(|inspect| {
+            module_names_to_check.contains(&inspect.raw.module_name)
+        })
         .collect();
 
     let deduped = inspect_core::dedupe_inspects(inspects);
     let sorted = inspect_core::sort_by(deduped, sort_strategy);
 
     table::inspects(sorted);
+}
+
+fn resolve_module_filter(module_filter: Option<String>) -> Option<Vec<String>> {
+    match module_filter {
+        Some(module) => Some(module.split(',').map(String::from).collect()),
+        None => None,
+    }
 }
 
 fn resolve_sort_strategy(sort_by: String) -> inspect_core::SortBy {
