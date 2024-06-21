@@ -17,30 +17,17 @@
 ### Installing
 
 ```sh
-# recommended
-npx import-holmes
-# or
-pnpm add -g import-holmes
-# or
-yarn global add import-holmes
-# or
-npm add --location=global import-holmes
-```
-> **Warning** if your intention is to use the core functions in your project consider not using global install
-
-### Cli
-
-```sh
-import-holmes
-# or
-import-holmes inspect
+brew tap pmqueiroz/tap
+brew install inspect-holmes
 ```
 
-| Options | Default | Meaning |
-|---------|---------|---------|
-| `-m`, `--module` | all `dependencies` and `devDependencies` | Filter inspection by module's name |
-| `-s`, `--specifier` | `undefined` | Filter inspection by specifier name |
-| `-g`, `--glob` | `**/*.{ts,tsx}` | Glob to select files to inspect |
+### Configuring
+
+| Options | Default | Meaning | Example |
+|---------|:-------:|---------|--|
+| `-m`, `--module` | `package.json.dependencies`| Filter inspection by module's name | `-m a,b` |
+| `-s`, `--specifier` | - | Filter inspection by specifier name | `-s Button` |
+| `-g`, `--glob` | `**/*.{ts,tsx}` | Glob to select files to inspect | `-g components/*.{js}` |
 
 #### Config File
 
@@ -50,63 +37,58 @@ For better configuring you can also set a config file named `.holmesrc.json` fol
 // .holmesrc.json
 {
   "$schema": "https://raw.githubusercontent.com/pmqueiroz/import-holmes/main/schema.json",
-  "module": "some-module", // you can pass string[] as well
-  "specifier": ["first", "second"], // you can pass a sting
-  "glob": "**/*.{ts,tsx}",
-  "globIgnore": ["node_modules/**", "**/*.{spec,test}.{ts,tsx}", "**/*.d.ts"],
-  "parseConfig": { // refer to https://swc.rs/docs/usage/core#parse
-    "syntax": "typescript",
-    "tsx": true
-  }
+  "module": ["some-module"],
+  "specifier": ["first", "second"],
+  "include": "**/*.{ts,tsx}",
+  "exclude": ["node_modules/**", "**/*.{spec,test}.{ts,tsx}", "**/*.d.ts"]
 }
 ```
 
 ### Core
 
-This package also provides the core function under the cli.
+```rs
+use inspect_core::{inspect_module};
+use std::fs;
 
-#### inspectModule
+fn main() {
+  let module = fs::read_to_string("index.js").expect("File does not exits");
+  let inspect: inspect_core::Inspect = inspect_module(&module);
 
-inspects a typescript/javascript module searching for import declarations and returns results from imports 
+  println!("{:#?}", inspect)
+}
 
-```ts
-import { inspectModule } from 'import-holmes'
-
-const someCode = `\
-import A from 'b'
-import { c } from 'd'
-import { e as f } from 'g'
-
-new A()
-
-c()
-
-const h = f
-`
-
-const inspect = inspectModule(someCode)
-
-// outputs
-[
-  { specifier: 'A', moduleName: 'b', referenced: 1 },
-  { specifier: 'c', moduleName: 'd', referenced: 1 },
-  { specifier: 'e', moduleName: 'g', referenced: 1 }
-]
-```
-There are some available options in inspect module
-
-```ts
-inspectModule('source code', {
-   filename?: string
-   modulesFilter?: string | string[]
-   specifiersFilter?: string | string[]
-   parseConfig?: ParserConfig // refer to https://swc.rs/docs/usage/core#parse
-})
 ```
 
-### known Issues
+### Known Issues
 
-Referenced column may not work well with some typings, such as type referenced in union type
+[Import alias](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#aliasn) will no count as referenced.
+
+For example this module:
+
+```tsx
+import { Button as DesignSystemButton } from 'design-system'
+
+export function Page() {
+  return (
+    <div>
+      <DesignSystemButton>One</DesignSystemButton>
+      <DesignSystemButton>Two</DesignSystemButton>
+    </div>
+  )
+}
+```
+will result in:
+
+```rs
+Inspect {
+  raw: RawInspect {
+    specifier: "Button",
+    module_name: "design-system"
+  },
+  referenced: 0,
+  occurrences: 1
+}
+```
 
 <div align="center">
 
