@@ -1,7 +1,7 @@
 name: CICD
 
 env:
-  CICD_INTERMEDIATES_DIR: "_cicd-intermediates"
+  CICI: "_cicd-intermediates"
 
 on:
   pull_request:
@@ -117,10 +117,9 @@ jobs:
         PKG_NAME=${PKG_BASENAME}${PKG_suffix}
         echo "PKG_NAME=${PKG_NAME}" >> $GITHUB_OUTPUT
 
-        PKG_STAGING="${{ env.CD_INTERMEDIATES_DIR }}/package"
+        PKG_STAGING="${{ env.CICD_INTERMEDIATES_DIR }}/package"
         ARCHIVE_DIR="${PKG_STAGING}/${PKG_BASENAME}/"
         mkdir -p "${ARCHIVE_DIR}"
-        mkdir -p "${ARCHIVE_DIR}/autocomplete"
 
         # Binary
         cp "${{ steps.bin.outputs.BIN_PATH }}" "$ARCHIVE_DIR"
