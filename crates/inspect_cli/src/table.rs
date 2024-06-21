@@ -19,7 +19,7 @@ pub fn inspects(inspects: Vec<Inspect>) {
     table.add_row(Row::new(vec![
       Cell::new(&inspect.raw.specifier),
       Cell::new(&inspect.raw.module_name),
-      Cell::new("wip"), // Cell::new(&inspect.occurrences.to_string()),
+      Cell::new(&inspect.occurrences.to_string()),
       Cell::new(&inspect.referenced.to_string())]));
   }
 
