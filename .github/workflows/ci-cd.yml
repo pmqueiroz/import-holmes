@@ -37,6 +37,7 @@ jobs:
     name: ${{ matrix.job.target }} (${{ matrix.job.os }})
     runs-on: ${{ matrix.job.os }}
     needs: crate_metadata
+    permissions: write-all
     strategy:
       fail-fast: false
       matrix:
