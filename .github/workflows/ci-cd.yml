@@ -1,7 +1,7 @@
 name: CICD
 
 env:
-  CICI: "_cicd-intermediates"
+  CICD_INTERMEDIATES_DIR: "_cicd-intermediates"
 
 on:
   pull_request:
