@@ -7,6 +7,7 @@ use std::path::{Path, PathBuf};
 
 mod read_module;
 mod log;
+mod table;
 
 #[derive(Parser, Debug)]
 struct Args {
@@ -45,7 +46,7 @@ fn main() {
         .flatten()
         .collect();
 
-    println!("{:#?}", inspects);
+    table::inspects(inspects);
 }
 
 fn resolve_path(path_opt: Option<String>) -> PathBuf {
