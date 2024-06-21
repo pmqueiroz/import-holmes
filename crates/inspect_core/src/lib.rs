@@ -40,3 +40,7 @@ pub fn dedupe_inspects(inspects: Vec<Inspect>) -> Vec<Inspect> {
 
     merged_inspects
 }
+
+pub fn sort_by_referenced(inspects: &mut Vec<Inspect>) {
+    inspects.sort_by_key(|inspect| inspect.referenced);
+}
