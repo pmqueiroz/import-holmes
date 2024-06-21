@@ -1,0 +1,147 @@
+name: CICD
+
+env:
+  CICD_INTERMEDIATES_DIR: "_cicd-intermediates"
+
+on:
+  pull_request:
+  push:
+    branches:
+      - main
+    tags:
+      - '*'
+
+jobs:
+  check_fmt:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: dtolnay/rust-toolchain@stable
+      with:
+        components: rustfmt
+    - uses: actions/checkout@v4
+    - run: cargo fmt -- --check
+  build:
+    name: ${{ matrix.job.target }} (${{ matrix.job.os }})
+    runs-on: ${{ matrix.job.os }}
+    needs: crate_metadata
+    strategy:
+      fail-fast: false
+      matrix:
+        job:
+          - { target: aarch64-unknown-linux-musl  , os: ubuntu-20.04, dpkg_arch: arm64,            use-cross: true }
+          - { target: aarch64-unknown-linux-gnu   , os: ubuntu-20.04, dpkg_arch: arm64,            use-cross: true }
+          - { target: arm-unknown-linux-gnueabihf , os: ubuntu-20.04, dpkg_arch: armhf,            use-cross: true }
+          - { target: arm-unknown-linux-musleabihf, os: ubuntu-20.04, dpkg_arch: musl-linux-armhf, use-cross: true }
+          - { target: i686-pc-windows-msvc        , os: windows-2019,                                              }
+          - { target: i686-unknown-linux-gnu      , os: ubuntu-20.04, dpkg_arch: i686,             use-cross: true }
+          - { target: i686-unknown-linux-musl     , os: ubuntu-20.04, dpkg_arch: musl-linux-i686,  use-cross: true }
+          - { target: x86_64-apple-darwin         , os: macos-12,                                                  }
+          - { target: aarch64-apple-darwin        , os: macos-14,                                                  }
+          - { target: x86_64-pc-windows-gnu       , os: windows-2019,                                              }
+          - { target: x86_64-pc-windows-msvc      , os: windows-2019,                                              }
+          - { target: x86_64-unknown-linux-gnu    , os: ubuntu-20.04, dpkg_arch: amd64,            use-cross: true }
+          - { target: x86_64-unknown-linux-musl   , os: ubuntu-20.04, dpkg_arch: musl-linux-amd64, use-cross: true }
+    env:
+      BUILD_CMD: cago
+    steps:
+    - name: Checkout source code
+      uses: actions/checkout@v4
+    - name: Install prerequisites
+      shell: bash
+      run: |
+        case ${{ matrix.job.target }} in
+          arm-unknown-linux-*) sudo apt-get -y update ; sudo apt-get -y install gcc-arm-linux-gnueabihf ;;
+          aarch64-unknown-linux-gnu) sudo apt-get -y update ; sudo apt-get -y install gcc-aarch64-linux-gnu ;;
+        esac
+    - name: Install Rust toolchain
+      uses: dtolnay/rust-toolchain@stable
+      with:
+        targets: ${{ matrix.job.target }}
+    - name: Install cross
+      if: matrix.job.use-cross
+      uses: taiki-e/install-action@v2
+      with:
+        tool: cross
+    - name: Overwrite build command env variable
+      if: matrix.job.use-cross
+      shell: bash
+      run: echo "BUILD_CMD=cross" >> $GITHUB_ENV
+    - name: Show version information (Rust, cargo, GCC)
+      shell: bash
+      run: |
+        gcc --version || true
+        rustup -V
+        rustup toolchain list
+        rustup default
+        cargo -V
+        rustc -V
+    - name: Build
+      shell: bash
+      run: $BUILD_CMD build --locked --release --target=${{ matrix.job.target }}
+    - name: Set binary name & path
+      id: bin
+      shell: bash
+      run: |
+        # Figure out suffix of binary
+        EXE_suffix=""
+        case ${{ matrix.job.target }} in
+          *-pc-windows-*) EXE_suffix=".exe" ;;
+        esac;
+
+        # Setup paths
+        BIN_NAME="${{ needs.crate_metadata.outputs.name }}${EXE_suffix}"
+        BIN_PATH="target/${{ matrix.job.target }}/release/${BIN_NAME}"
+
+        # Let subsequent steps know where to find the binary
+        echo "BIN_PATH=${BIN_PATH}" >> $GITHUB_OUTPUT
+        echo "BIN_NAME=${BIN_NAME}" >> $GITHUB_OUTPUT
+    - name: Create tarball
+      id: package
+      shell: bash
+      run: |
+        PKG_suffix=".tar.gz" ; case ${{ matrix.job.target }} in *-pc-windows-*) PKG_suffix=".zip" ;; esac;
+        PKG_BASENAME=${{ needs.crate_metadata.outputs.name }}-v${{ needs.crate_metadata.outputs.version }}-${{ matrix.job.target }}
+        PKG_NAME=${PKG_BASENAME}${PKG_suffix}
+        echo "PKG_NAME=${PKG_NAME}" >> $GITHUB_OUTPUT
+
+        PKG_STAGING="${{ env.CD_INTERMEDIATES_DIR }}/package"
+        ARCHIVE_DIR="${PKG_STAGING}/${PKG_BASENAME}/"
+        mkdir -p "${ARCHIVE_DIR}"
+        mkdir -p "${ARCHIVE_DIR}/autocomplete"
+
+        # Binary
+        cp "${{ steps.bin.outputs.BIN_PATH }}" "$ARCHIVE_DIR"
+
+        # README, LICENSE and CHANGELOG files
+        cp "readme.md" "LICENSE" "$ARCHIVE_DIR"
+
+        # base compressed package
+        pushd "${PKG_STAGING}/" >/dev/null
+        case ${{ matrix.job.target }} in
+          *-pc-windows-*) 7z -y a "${PKG_NAME}" "${PKG_BASENAME}"/* | tail -2 ;;
+          *) tar czf "${PKG_NAME}" "${PKG_BASENAME}"/* ;;
+        esac;
+        popd >/dev/null
+
+        # Let subsequent steps know where to find the compressed package
+        echo "PKG_PATH=${PKG_STAGING}/${PKG_NAME}" >> $GITHUB_OUTPUT
+    - name: "Artifact upload: tarball"
+      uses: actions/upload-artifact@master
+      with:
+        name: ${{ steps.package.outputs.PKG_NAME }}
+        path: ${{ steps.package.outputs.PKG_PATH }}
+    - name: Check for release
+      id: is-release
+      shell: bash
+      run: |
+        unset IS_RELEASE ; if [[ $GITHUB_REF =~ ^refs/tags/v[0-9].* ]]; then IS_RELEASE='true' ; fi
+        echo "IS_RELEASE=${IS_RELEASE}" >> $GITHUB_OUTPUT
+    - name: Publish archives and packages
+      uses: softprops/action-gh-release@v2
+      if: steps.is-release.outputs.IS_RELEASE
+      with:
+        files: |
+          ${{ steps.package.outputs.PKG_PATH }}
+          ${{ steps.debian-package.outputs.DPKG_PATH }}
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
