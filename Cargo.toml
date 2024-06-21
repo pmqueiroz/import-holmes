@@ -11,10 +11,20 @@ keywords = ["es3", "es5", "es2015", "es2016", "es2017", "es2018", "es2019", "es2
 categories = ["command-line-utilities"]
 edition = "2021"
 
+[[bin]]
+bench = false
+path = "src/main.rs"
+name = "inspect-holmes"
+
+[workspace]
+members = [
+  "crates/inspect_core",
+]
+
 [dependencies]
 clap = { version = "4.1.11", features = ["derive"] }
 globwalk = "0.8.1"
-inspect_core = { version = "0.1.0", path = "./crates/inspect_core" }
+inspect_core = { version = "0.1.0", path = "crates/inspect_core" }
 once_cell = "1.19.0"
 prettytable = "0.10.0"
 rayon = "1.7.0"
