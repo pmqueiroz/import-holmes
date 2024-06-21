@@ -35,7 +35,6 @@ impl Visit for ImportVisitor {
         
         match &closing_jsx.name {
             JSXElementName::Ident(ident) => {
-                println!("Ident name: {:#?}", ident.sym);
                 let ident_name = ident.sym.to_string();
 
                 if let Some(count) = self.closing_reference_counts.get_mut(&ident_name) {
