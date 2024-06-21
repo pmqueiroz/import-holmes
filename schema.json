@@ -3,43 +3,28 @@
    "type": "object",
    "properties": {
       "module": {
-         "oneOf": [
-            {
-               "type": "string"
-            },
-            {
-               "type": "array",
-               "items": {
-                  "type": "string"
-               },
-               "minItems": 1
-            }
-         ]
+         "type": "array",
+         "items": {
+            "type": "string"
+         },
+         "minItems": 1
       },
       "specifier": {
-         "oneOf": [
-            {
-               "type": "string"
-            },
-            {
-               "type": "array",
-               "items": {
-                  "type": "string"
-               },
-               "minItems": 1
-            }
-         ]
+         "type": "array",
+         "items": {
+            "type": "string"
+         },
+         "minItems": 1
       },
-      "glob": {
+      "include": {
          "type": "string",
          "pattern": "^((?!\\!\\(|\\)|\\!\\(|\\)).)*$"
       },
-      "globIgnore": {
+      "exclude": {
          "type": "array",
          "items": {
             "type": "string"
          }
-      },
-      "parseConfig": {}
+      }
    }
 }
