@@ -1,4 +1,4 @@
-use inspect_core::{inspect_module, dedupe_inspects};
+use inspect_core::{inspect_module, dedupe_inspects, sort_by_referenced};
 use clap::Parser;
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use std::env;
@@ -46,7 +46,9 @@ fn main() {
         .flatten()
         .collect();
 
-    table::inspects(dedupe_inspects(inspects));
+    let sorted = sort_by_referenced(&mut dedupe_inspects(inspects));
+
+    table::inspects(sorted);
 }
 
 fn resolve_path(path_opt: Option<String>) -> PathBuf {
