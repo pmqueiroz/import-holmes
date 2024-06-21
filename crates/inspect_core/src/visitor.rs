@@ -11,7 +11,8 @@ pub struct RawInspect {
 #[derive(Debug)]
 pub struct  Inspect {
     pub raw: RawInspect,
-    pub referenced: usize
+    pub referenced: usize,
+    pub occurrences: usize
 }
 
 #[derive(Debug)]
@@ -127,7 +128,8 @@ pub fn get_program_inspects(program: Program) -> Vec<Inspect> {
         inspects.push(
             Inspect {
                 raw: raw_inspect,
-                referenced: real_referenced
+                referenced: real_referenced,
+                occurrences: 1
             }
         )
    }

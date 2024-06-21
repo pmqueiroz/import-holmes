@@ -25,22 +25,27 @@ pub fn inspect_module(source_code: &str) -> Vec<visitor::Inspect> {
 }
 
 pub fn dedupe_inspects(inspects: Vec<Inspect>) -> Vec<Inspect> {
-    let mut merged_map: HashMap<(String, String), usize> = HashMap::new();
+    let mut merged_map: HashMap<(String, String), (usize, usize)> = HashMap::new();
 
     for inspect in inspects {
-        let key = (inspect.raw.specifier.clone(), inspect.raw.module_name.clone());
-        let count = merged_map.entry(key).or_insert(0);
-        *count += inspect.referenced;
+        let key = (
+            inspect.raw.specifier.clone(),
+            inspect.raw.module_name.clone(),
+        );
+        let (total_referenced, total_occurrences) = merged_map.entry(key).or_insert((0, 0));
+        *total_referenced += inspect.referenced;
+        *total_occurrences += inspect.occurrences;
     }
 
     let merged_inspects: Vec<Inspect> = merged_map
         .into_iter()
-        .map(|((specifier, module_name), referenced)| Inspect {
+        .map(|((specifier, module_name), (referenced, occurrences))| Inspect {
             raw: RawInspect {
                 specifier,
                 module_name,
             },
             referenced,
+            occurrences,
         })
         .collect();
 
@@ -56,8 +61,9 @@ pub fn sort_by(inspects: Vec<Inspect>, by: SortBy) -> Vec<Inspect> {
 }
 
 fn sort_by_occurrences(inspects: Vec<Inspect>) -> Vec<Inspect> {
-    println!("SORT BY OCCURRENCES NOT IMPLEMENTED YET");
-    inspects
+    let mut sorted_inspects = inspects;
+    sorted_inspects.sort_by_key(|inspect| std::cmp::Reverse(inspect.occurrences));
+    sorted_inspects
 }
 
 fn sort_by_referenced(inspects: Vec<Inspect>) -> Vec<Inspect> {
