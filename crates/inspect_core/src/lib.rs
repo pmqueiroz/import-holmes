@@ -11,6 +11,12 @@ mod visitor;
 pub use visitor::Inspect;
 use visitor::RawInspect;
 
+pub enum SortBy {
+    Referenced,
+    Occurrences,
+    None
+}
+
 pub fn inspect_module(source_code: &str) -> Vec<visitor::Inspect> {
     let program = parser::parse_program(source_code);
     let inspects = visitor::get_program_inspects(program);
@@ -41,6 +47,21 @@ pub fn dedupe_inspects(inspects: Vec<Inspect>) -> Vec<Inspect> {
     merged_inspects
 }
 
-pub fn sort_by_referenced(inspects: &mut Vec<Inspect>) {
-    inspects.sort_by_key(|inspect| inspect.referenced);
+pub fn sort_by(inspects: Vec<Inspect>, by: SortBy) -> Vec<Inspect> {
+    match by {
+        SortBy::Referenced => sort_by_referenced(inspects),
+        SortBy::Occurrences => sort_by_occurrences(inspects),
+        SortBy::None => inspects,
+    }
+}
+
+fn sort_by_occurrences(inspects: Vec<Inspect>) -> Vec<Inspect> {
+    println!("SORT BY OCCURRENCES NOT IMPLEMENTED YET");
+    inspects
+}
+
+fn sort_by_referenced(inspects: Vec<Inspect>) -> Vec<Inspect> {
+    let mut sorted_inspects = inspects;
+    sorted_inspects.sort_by_key(|inspect| std::cmp::Reverse(inspect.referenced));
+    sorted_inspects
 }
