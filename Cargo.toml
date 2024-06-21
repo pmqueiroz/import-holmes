@@ -14,7 +14,7 @@ edition = "2021"
 [[bin]]
 bench = false
 path = "src/main.rs"
-name = "inspect-holmes"
+name = "import-holmes"
 
 [workspace]
 members = [

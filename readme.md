@@ -19,7 +19,7 @@ at any moment, check [issues][issues-url] page to check futures features and cur
 
 ```sh
 brew tap pmqueiroz/tap
-brew install inspect-holmes
+brew install import-holmes
 ```
 
 ### Configuring
