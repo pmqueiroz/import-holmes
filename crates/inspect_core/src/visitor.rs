@@ -17,9 +17,9 @@ pub struct  Inspect {
 #[derive(Debug)]
 struct ImportVisitor {
     raw_inspects: Vec<RawInspect>,
-    reference_counts: HashMap<String, usize>
+    reference_counts: HashMap<String, usize>,
+    closing_reference_counts: HashMap<String, usize>,
 }
-
 
 impl Visit for ImportVisitor {
     fn visit_module_item(&mut self, item: &ModuleItem) {
@@ -29,6 +29,27 @@ impl Visit for ImportVisitor {
         }
 
         swc_ecma_visit::visit_module_item(self, item);
+    }
+
+    fn visit_jsx_closing_element(&mut self, closing_jsx: &JSXClosingElement) {
+        
+        match &closing_jsx.name {
+            JSXElementName::Ident(ident) => {
+                println!("Ident name: {:#?}", ident.sym);
+                let ident_name = ident.sym.to_string();
+
+                if let Some(count) = self.closing_reference_counts.get_mut(&ident_name) {
+                    *count += 1;
+                } else {
+                    self.closing_reference_counts.insert(ident_name, 1);
+                }
+            },
+            _ => {
+                // Ignore JSXMemberExpr and JSXNamespacedName variants
+            }
+        }
+
+        swc_ecma_visit::visit_jsx_closing_element(self, closing_jsx);
     }
 
     fn visit_ident(&mut self, ident: &Ident) {
@@ -88,6 +109,7 @@ pub fn get_program_inspects(program: Program) -> Vec<Inspect> {
    let mut visitor = ImportVisitor {
         raw_inspects: Vec::new(),
         reference_counts: HashMap::new(),
+        closing_reference_counts: HashMap::new(),
    };
 
    visitor.visit_program(&program);
@@ -99,10 +121,14 @@ pub fn get_program_inspects(program: Program) -> Vec<Inspect> {
             // subtract 1 to skip self import ident
             .map_or(0, |value| value - 1);
 
+        let real_referenced = referenced - visitor.closing_reference_counts.get(&raw_inspect.specifier)
+            .copied()
+            .unwrap_or(0);
+
         inspects.push(
             Inspect {
                 raw: raw_inspect,
-                referenced
+                referenced: real_referenced
             }
         )
    }
