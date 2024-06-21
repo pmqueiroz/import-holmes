@@ -10,7 +10,8 @@
 
 </div>
 
-> **Warning** this tool isn't in a stable version, check [issues][issues-url] page to check futures features and current problems
+> **Warning** this tool isn't in a stable version and can change
+at any moment, check [issues][issues-url] page to check futures features and current problems
 
 ## Getting Started
 
