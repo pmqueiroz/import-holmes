@@ -91,7 +91,6 @@ jobs:
     - name: Build
       shell: bash
       run: $BUILD_CMD build --locked --release --target=${{ matrix.job.target }}
-    - run: ls -1 target/${{ matrix.job.target }}/release
     - name: Set binary name & path
       id: bin
       shell: bash
