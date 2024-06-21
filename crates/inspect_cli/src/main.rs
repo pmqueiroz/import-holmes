@@ -1,4 +1,4 @@
-use inspect_core::inspect_module;
+use inspect_core::{inspect_module, dedupe_inspects};
 use clap::Parser;
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use std::env;
@@ -46,7 +46,7 @@ fn main() {
         .flatten()
         .collect();
 
-    table::inspects(inspects);
+    table::inspects(dedupe_inspects(inspects));
 }
 
 fn resolve_path(path_opt: Option<String>) -> PathBuf {
