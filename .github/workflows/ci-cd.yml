@@ -23,6 +23,7 @@ jobs:
   crate_metadata:
     name: Extract crate metadata
     runs-on: ubuntu-latest
+    needs: check_fmt
     steps:
     - uses: actions/checkout@v4
     - name: Extract crate information
