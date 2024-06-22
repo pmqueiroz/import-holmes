@@ -31,7 +31,7 @@ impl Args {
 pub struct JsonConfig {
   module: Option<Vec<String>>,
   specifier: Option<Vec<String>>,
-  include: Option<String>,
+  include: Option<Vec<String>>,
   exclude: Option<Vec<String>>,
   #[serde(rename = "sortStrategy")]
   sort_strategy: Option<String>,
@@ -41,7 +41,7 @@ pub struct JsonConfig {
 pub struct Config {
   pub module: Option<Vec<String>>,
   pub specifier: Vec<String>,
-  pub include: String,
+  pub include: Vec<String>,
   pub exclude: Vec<String>,
   pub path: PathBuf,
   pub sort_strategy: SortBy,
@@ -82,7 +82,7 @@ fn get_default_config() -> Config {
   Config {
       module: None,
       specifier: vec!["first".to_string(), "second".to_string()],
-      include: "**/*.{ts,tsx}".to_string(),
+      include: vec!["**/*.{ts,tsx}".to_string()],
       exclude: vec![
         "node_modules/**".to_string(),
         "**/*.{spec,test}.{ts,tsx}".to_string(),
@@ -110,7 +110,7 @@ fn apply_args_priority(config: Config, args: Args, path: PathBuf) -> Config {
   let arg_sort_strategy = resolve_sort_strategy(args.sort_strategy);
 
   Config {
-    include: args.glob.unwrap_or(config.include),
+    include: arg_string_to_vec(args.glob).unwrap_or(config.include),
     module: arg_string_to_vec(args.filter_module).or(config.module),
     specifier: config.specifier,
     exclude: config.exclude,

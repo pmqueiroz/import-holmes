@@ -31,10 +31,10 @@ pub fn read_package_json(cwd: &PathBuf) -> Package {
 
 pub fn get_module_files(
   cwd: &PathBuf,
-  include: String,
+  include: Vec<String>,
 ) -> Vec<String> {
   let mut paths: Vec<String> = Vec::new();
-  let mut patterns: Vec<String> = vec![include];
+  let mut patterns = include.clone();
 
   let mut ignore_patterns = vec![
     "node_modules/*".to_string(),
