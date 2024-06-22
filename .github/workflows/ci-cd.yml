@@ -133,9 +133,15 @@ jobs:
         # base compressed package
         pushd "${PKG_STAGING}/" >/dev/null
         case ${{ matrix.job.target }} in
-          *-pc-windows-*) 7z -y a "${PKG_NAME}" "${PKG_BASENAME}"/* | tail -2; certutil -hashfile $PKG_PATH SHA256 > $PKG_NAME_SHA ;;
-          *) tar czf "${PKG_NAME}" "${PKG_BASENAME}"/*; shasum -a 256 $PKG_PATH > $PKG_NAME_SHA ;;
-        esac;
+          *-pc-windows-*)
+            7z -y a "${PKG_NAME}" "${PKG_BASENAME}"/* | tail -2
+            certutil -hashfile $PKG_PATH SHA256 > $PKG_NAME_SHA
+            ;;
+          *)
+            tar czf "${PKG_NAME}" "${PKG_BASENAME}"/*
+            shasum -a 256 $PKG_PATH > $PKG_NAME_SHA
+            ;;
+        esac
         popd >/dev/null
 
         PKG_PATH=${PKG_STAGING}/${PKG_NAME}
