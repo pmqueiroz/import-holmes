@@ -2,10 +2,10 @@ use inspect_core::inspect_module;
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use std::fs;
 
+mod config;
 mod log;
 mod read_module;
 mod table;
-mod config;
 
 fn main() {
   let config = config::get_config();

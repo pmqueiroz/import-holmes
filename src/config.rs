@@ -1,9 +1,9 @@
+use clap::Parser;
 use inspect_core::SortBy;
 use serde::{Deserialize, Serialize};
-use std::path::{Path, PathBuf};
-use std::fs;
-use clap::Parser;
 use std::env;
+use std::fs;
+use std::path::{Path, PathBuf};
 
 use crate::log;
 
@@ -74,22 +74,23 @@ fn config_file_exits(config_path: &PathBuf) -> bool {
 }
 
 fn read_config(config_path: &PathBuf) -> JsonConfig {
-  let config_contents = fs::read_to_string(config_path).expect("Could not read config file");
+  let config_contents =
+    fs::read_to_string(config_path).expect("Could not read config file");
   serde_json::from_str(&config_contents).expect("Could not parse config file")
 }
 
 fn get_default_config() -> Config {
   Config {
-      module: None,
-      specifier: None,
-      include: vec!["**/*.{ts,tsx}".to_string()],
-      exclude: vec![
-        "node_modules/**".to_string(),
-        "**/*.{spec,test}.{ts,tsx}".to_string(),
-        "**/*.d.ts".to_string(),
-      ],
-      path: PathBuf::from("."),
-      sort_strategy: SortBy::None,
+    module: None,
+    specifier: None,
+    include: vec!["**/*.{ts,tsx}".to_string()],
+    exclude: vec![
+      "node_modules/**".to_string(),
+      "**/*.{spec,test}.{ts,tsx}".to_string(),
+      "**/*.d.ts".to_string(),
+    ],
+    path: PathBuf::from("."),
+    sort_strategy: SortBy::None,
   }
 }
 
@@ -144,9 +145,13 @@ fn resolve_path(path_opt: Option<String>) -> PathBuf {
 
 fn resolve_sort_strategy(sort_by: Option<String>) -> Option<SortBy> {
   match sort_by {
-      Some(ref s) if s.eq_ignore_ascii_case("referenced") => Some(SortBy::Referenced),
-      Some(ref s) if s.eq_ignore_ascii_case("occurrences") => Some(SortBy::Occurrences),
-      Some(ref s) if s.eq_ignore_ascii_case("none") => Some(SortBy::None),
-      _ => None,
+    Some(ref s) if s.eq_ignore_ascii_case("referenced") => {
+      Some(SortBy::Referenced)
+    }
+    Some(ref s) if s.eq_ignore_ascii_case("occurrences") => {
+      Some(SortBy::Occurrences)
+    }
+    Some(ref s) if s.eq_ignore_ascii_case("none") => Some(SortBy::None),
+    _ => None,
   }
 }

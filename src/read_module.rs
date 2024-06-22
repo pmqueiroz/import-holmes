@@ -29,10 +29,7 @@ pub fn read_package_json(cwd: &PathBuf) -> Package {
   data
 }
 
-pub fn get_module_files(
-  cwd: &PathBuf,
-  include: Vec<String>,
-) -> Vec<String> {
+pub fn get_module_files(cwd: &PathBuf, include: Vec<String>) -> Vec<String> {
   let mut paths: Vec<String> = Vec::new();
   let mut patterns = include.clone();
 
