@@ -139,14 +139,11 @@ jobs:
         popd >/dev/null
 
         PKG_PATH=${PKG_STAGING}/${PKG_NAME}
+        PKG_PATH_SHA=${PKG_STAGING}/${PKG_NAME_SHA}
 
         # Let subsequent steps know where to find the compressed package and sha
         echo "PKG_PATH=${PKG_PATH}" >> $GITHUB_OUTPUT
-        echo "PKG_PATH_SHA=${PKG_NAME_SHA}" >> $GITHUB_OUTPUT
-    - run: echo ${{ steps.package.outputs.PKG_NAME }}
-    - run: echo ${{ steps.package.outputs.PKG_PATH }}
-    - run: echo ${{ steps.package.outputs.PKG_NAME_SHA }}
-    - run: echo ${{ steps.package.outputs.PKG_PATH_SHA }}
+        echo "PKG_PATH_SHA=${PKG_PATH_SHA}" >> $GITHUB_OUTPUT
     - name: "Artifact upload: tarball"
       uses: actions/upload-artifact@master
       with:
