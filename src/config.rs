@@ -40,7 +40,7 @@ pub struct JsonConfig {
 #[derive(Debug)]
 pub struct Config {
   pub module: Option<Vec<String>>,
-  pub specifier: Vec<String>,
+  pub specifier: Option<Vec<String>>,
   pub include: Vec<String>,
   pub exclude: Vec<String>,
   pub path: PathBuf,
@@ -81,7 +81,7 @@ fn read_config(config_path: &PathBuf) -> JsonConfig {
 fn get_default_config() -> Config {
   Config {
       module: None,
-      specifier: vec!["first".to_string(), "second".to_string()],
+      specifier: None,
       include: vec!["**/*.{ts,tsx}".to_string()],
       exclude: vec![
         "node_modules/**".to_string(),
@@ -98,7 +98,7 @@ fn merge_configs(default_config: Config, json_config: JsonConfig) -> Config {
 
   Config {
     module: json_config.module.or(default_config.module),
-    specifier: json_config.specifier.unwrap_or(default_config.specifier),
+    specifier: json_config.specifier.or(default_config.specifier),
     include: json_config.include.unwrap_or(default_config.include),
     exclude: json_config.exclude.unwrap_or(default_config.exclude),
     path: default_config.path,
