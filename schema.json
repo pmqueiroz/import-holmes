@@ -25,6 +25,10 @@
          "items": {
             "type": "string"
          }
+      },
+      "sortStrategy": {
+         "type": "string",
+         "enum": ["referenced", "occurrences"]
       }
    }
 }

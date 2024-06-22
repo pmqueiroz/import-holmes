@@ -41,7 +41,8 @@ For better configuring you can also set a config file named `.holmesrc.json` fol
   "module": ["some-module"],
   "specifier": ["first", "second"],
   "include": "**/*.{ts,tsx}",
-  "exclude": ["node_modules/**", "**/*.{spec,test}.{ts,tsx}", "**/*.d.ts"]
+  "exclude": ["node_modules/**", "**/*.{spec,test}.{ts,tsx}", "**/*.d.ts"],
+  "sortStrategy": "referenced"
 }
 ```
 
