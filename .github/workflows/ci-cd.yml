@@ -116,7 +116,9 @@ jobs:
         PKG_suffix=".tar.gz" ; case ${{ matrix.job.target }} in *-pc-windows-*) PKG_suffix=".zip" ;; esac;
         PKG_BASENAME=${{ needs.crate_metadata.outputs.name }}-v${{ needs.crate_metadata.outputs.version }}-${{ matrix.job.target }}
         PKG_NAME=${PKG_BASENAME}${PKG_suffix}
+        PKG_NAME_SHA=${PKG_NAME}.sha256
         echo "PKG_NAME=${PKG_NAME}" >> $GITHUB_OUTPUT
+        echo "PKG_NAME_SHA=${PKG_NAME_SHA}" >> $GITHUB_OUTPUT
 
         PKG_STAGING="${{ env.CICD_INTERMEDIATES_DIR }}/package"
         ARCHIVE_DIR="${PKG_STAGING}/${PKG_BASENAME}/"
@@ -135,7 +137,7 @@ jobs:
           *-pc-windows-*) 7z -y a "${PKG_NAME}" "${PKG_BASENAME}"/* | tail -2 ;;
           *) tar czf "${PKG_NAME}" "${PKG_BASENAME}"/* ;;
         esac;
-        shasum $PKG_PATH > $PKG_PATH.sha256
+        shasum $PKG_PATH > $PKG_NAME_SHA
 
         popd >/dev/null
 
@@ -143,12 +145,17 @@ jobs:
 
         # Let subsequent steps know where to find the compressed package and sha
         echo "PKG_PATH=${PKG_PATH}" >> $GITHUB_OUTPUT
-        echo "PKG_PATH_SHA=${PKG_PATH}.sha256" >> $GITHUB_OUTPUT
+        echo "PKG_PATH_SHA=${PKG_NAME_SHA}" >> $GITHUB_OUTPUT
     - name: "Artifact upload: tarball"
       uses: actions/upload-artifact@master
       with:
         name: ${{ steps.package.outputs.PKG_NAME }}
         path: ${{ steps.package.outputs.PKG_PATH }}
+    - name: "Artifact upload: sha256"
+      uses: actions/upload-artifact@master
+      with:
+        name: ${{ steps.package.outputs.PKG_NAME_SHA }}
+        path: ${{ steps.package.outputs.PKG_PATH_SHA }}
     - name: Check for release
       id: is-release
       shell: bash
