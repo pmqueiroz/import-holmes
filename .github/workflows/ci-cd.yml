@@ -150,7 +150,7 @@ jobs:
         path: ${{ steps.package.outputs.PKG_PATH }}
     - name: "Artifact upload: sha256"
       uses: actions/upload-artifact@master
-      if: ! contains(matrix.job.target, '-pc-windows-'')
+      if: ${{ !contains(matrix.job.target, '-pc-windows-'') }}
       with:
         name: ${{ steps.package.outputs.PKG_NAME_SHA }}
         path: ${{ steps.package.outputs.PKG_PATH_SHA }}
