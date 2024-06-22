@@ -130,14 +130,20 @@ jobs:
 
         # base compressed package
         pushd "${PKG_STAGING}/" >/dev/null
+
         case ${{ matrix.job.target }} in
           *-pc-windows-*) 7z -y a "${PKG_NAME}" "${PKG_BASENAME}"/* | tail -2 ;;
           *) tar czf "${PKG_NAME}" "${PKG_BASENAME}"/* ;;
         esac;
+        shasum $PKG_PATH > $PKG_PATH.sha256
+
         popd >/dev/null
 
-        # Let subsequent steps know where to find the compressed package
-        echo "PKG_PATH=${PKG_STAGING}/${PKG_NAME}" >> $GITHUB_OUTPUT
+        PKG_PATH=${PKG_STAGING}/${PKG_NAME}
+
+        # Let subsequent steps know where to find the compressed package and sha
+        echo "PKG_PATH=${PKG_PATH}" >> $GITHUB_OUTPUT
+        echo "PKG_PATH_SHA=${PKG_PATH}.sha256" >> $GITHUB_OUTPUT
     - name: "Artifact upload: tarball"
       uses: actions/upload-artifact@master
       with:
@@ -155,6 +161,6 @@ jobs:
       with:
         files: |
           ${{ steps.package.outputs.PKG_PATH }}
-          ${{ steps.debian-package.outputs.DPKG_PATH }}
+          ${{ steps.package.outputs.PKG_PATH_SHA }}
       env:
         GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
