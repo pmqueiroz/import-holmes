@@ -1,8 +1,9 @@
 {
    "dependencies": {
-      "cleiton": "salve"
+      "react": "latest",
+      "design-system": "latest"
    },
    "devDependencies": {
-      "salve": "cleiton"
+      "a": "latest"
    }
 }

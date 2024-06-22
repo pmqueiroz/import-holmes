@@ -11,6 +11,7 @@ mod visitor;
 pub use visitor::Inspect;
 use visitor::RawInspect;
 
+#[derive(Debug)]
 pub enum SortBy {
   Referenced,
   Occurrences,

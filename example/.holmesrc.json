@@ -1,0 +1,6 @@
+{
+  "$schema": "https://raw.githubusercontent.com/pmqueiroz/import-holmes/main/schema.json",
+  "module": ["react"],
+  "specifier": ["useState", "useRef"],
+  "include": "**/*.{tsx}"
+}
