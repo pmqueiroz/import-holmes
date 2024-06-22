@@ -1,6 +1,6 @@
 [package]
 name = "import-holmes"
-version = "0.1.0"
+version = "0.2.0"
 authors = ["Peam <contact@pmqueiroz.dev>"]
 description = "A tool to inspect Javascript/Typescript projects imports"
 license = "MIT"
