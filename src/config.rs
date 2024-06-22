@@ -5,7 +5,7 @@ use std::env;
 use std::fs;
 use std::path::{Path, PathBuf};
 
-use crate::log;
+use crate::fatal;
 
 const CONFIG_FILE_NAME: &str = ".holmesrc.json";
 
@@ -52,8 +52,7 @@ pub fn get_config() -> Config {
   let path = resolve_path(args.path.clone());
 
   if !path.exists() {
-    let exit_message = format!("Path {} does not exist", path.display());
-    log::fatal(&exit_message, Some(1));
+    fatal!("Path {} does not exist", path.display());
   }
 
   let default_config = get_default_config();

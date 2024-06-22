@@ -3,6 +3,7 @@ use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use std::fs;
 
 mod config;
+#[macro_use]
 mod log;
 mod read_module;
 mod table;
@@ -11,11 +12,10 @@ fn main() {
   let config = config::get_config();
 
   if !read_module::package_exists(&config.path) {
-    let exit_message = format!(
+    fatal!(
       "File package.json not found in {} make sure it's a node project",
       config.path.display()
     );
-    log::fatal(&exit_message, Some(1));
   }
 
   let package = read_module::read_package_json(&config.path);
