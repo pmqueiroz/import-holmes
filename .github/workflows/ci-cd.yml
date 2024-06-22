@@ -134,7 +134,7 @@ jobs:
         pushd "${PKG_STAGING}/" >/dev/null
         case ${{ matrix.job.target }} in
           *-pc-windows-*)
-            7z -y a "${PKG_NAME}" "${PKG_BASENAME}"/* | tail -2
+            7z -y a "${PKG_NAME}" "${PKG_BASENAME}"/*
             # certutil -hashfile $PKG_PATH SHA256 > $PKG_NAME_SHA
             ;;
           *)
