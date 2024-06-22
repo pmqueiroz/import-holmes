@@ -132,13 +132,10 @@ jobs:
 
         # base compressed package
         pushd "${PKG_STAGING}/" >/dev/null
-
         case ${{ matrix.job.target }} in
           *-pc-windows-*) 7z -y a "${PKG_NAME}" "${PKG_BASENAME}"/* | tail -2 ;;
-          *) tar czf "${PKG_NAME}" "${PKG_BASENAME}"/* ;;
+          *) tar czf "${PKG_NAME}" "${PKG_BASENAME}"/*; shasum $PKG_PATH > $PKG_NAME_SHA ;;
         esac;
-        shasum $PKG_PATH > $PKG_NAME_SHA
-
         popd >/dev/null
 
         PKG_PATH=${PKG_STAGING}/${PKG_NAME}
@@ -153,6 +150,7 @@ jobs:
         path: ${{ steps.package.outputs.PKG_PATH }}
     - name: "Artifact upload: sha256"
       uses: actions/upload-artifact@master
+      if: ! contains(matrix.job.target, '-pc-windows-'')
       with:
         name: ${{ steps.package.outputs.PKG_NAME_SHA }}
         path: ${{ steps.package.outputs.PKG_PATH_SHA }}
