@@ -17,8 +17,11 @@
          "minItems": 1
       },
       "include": {
-         "type": "string",
-         "pattern": "^((?!\\!\\(|\\)|\\!\\(|\\)).)*$"
+         "type": "array",
+         "items": {
+            "type": "string",
+            "pattern": "^((?!\\!\\(|\\)|\\!\\(|\\)).)*$"
+         }
       },
       "exclude": {
          "type": "array",
