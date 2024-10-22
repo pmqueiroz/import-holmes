@@ -32,6 +32,10 @@
       "sortStrategy": {
          "type": "string",
          "enum": ["referenced", "occurrences"]
+      },
+      "output": {
+         "type": "string",
+         "enum": ["json", "table"]
       }
    }
 }
