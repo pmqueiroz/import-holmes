@@ -22,13 +22,15 @@ brew tap pmqueiroz/tap
 brew install import-holmes
 ```
 
-### Configuring
+### Cli args
 
 | Options | Default | Meaning | Example |
 |---------|:-------:|---------|--|
 | `-m`, `--module` | `package.json.dependencies`| Filter inspection by module's name | `-m a,b` |
 | `-s`, `--specifier` | - | Filter inspection by specifier name | `-s Button` |
 | `-g`, `--glob` | `**/*.{ts,tsx}` | Glob to select files to inspect | `-g components/*.{js}` |
+| `-o`, `--output` | `table` | Configure the output type | `-o json` |
+| `--sort` | `none` | Sort the output by `ocurrences` or `referenced` | `--sort referenced` |
 
 #### Config File
 
