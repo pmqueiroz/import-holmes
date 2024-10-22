@@ -5,27 +5,16 @@ use std::fs;
 mod config;
 #[macro_use]
 mod log;
-mod read_module;
+mod read_project;
 mod table;
 
 fn main() {
   let config = config::get_config();
-
-  if !read_module::package_exists(&config.path) {
-    fatal!(
-      "File package.json not found in {} make sure it's a node project",
-      config.path.display()
-    );
-  }
-
-  let package = read_module::read_package_json(&config.path);
-  let files = read_module::get_module_files(&config.path, config.include);
-  let dependencies = package
-    .dependencies
-    .keys()
-    .cloned()
-    .collect::<Vec<String>>();
+  let package = read_project::read_package_json(&config.path);
+  let dependencies = read_project::get_dependencies(&package);
   let modules_filter = config.module.clone().unwrap_or(dependencies);
+
+  let files = read_project::get_module_files(&config.path, config.include);
 
   let inspects: Vec<inspect_core::Inspect> = files
     .par_iter()

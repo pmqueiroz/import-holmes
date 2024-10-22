@@ -1,5 +1,6 @@
 extern crate globwalk;
 
+use crate::fatal;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
@@ -12,13 +13,15 @@ pub struct Package {
   pub dev_dependencies: HashMap<String, String>,
 }
 
-pub fn package_exists(dir_path: &PathBuf) -> bool {
-  let package_json_path = dir_path.join("package.json");
-  package_json_path.exists()
-}
-
 pub fn read_package_json(cwd: &PathBuf) -> Package {
   let file_path = cwd.join("package.json");
+
+  if !file_path.exists() {
+    fatal!(
+      "File package.json not found in {} make sure it's a node project",
+      cwd.display()
+    );
+  }
 
   let file =
     std::fs::File::open(file_path).expect("Failed to read package.json file");
@@ -58,4 +61,14 @@ pub fn get_module_files(cwd: &PathBuf, include: Vec<String>) -> Vec<String> {
   }
 
   paths
+}
+
+pub fn get_dependencies(package: &Package) -> Vec<String> {
+  let dependencies = package
+    .dependencies
+    .keys()
+    .cloned()
+    .collect::<Vec<String>>();
+
+  dependencies
 }
