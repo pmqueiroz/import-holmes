@@ -1,5 +1,5 @@
 use clap::Parser;
-use inspect_core::SortBy;
+use inspect_core::{Output, SortBy};
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;
@@ -19,6 +19,8 @@ pub struct Args {
   pub sort_strategy: Option<String>,
   #[arg(short = 'm', long = "module")]
   pub filter_module: Option<String>,
+  #[arg(short = 'o', long = "output")]
+  pub output: Option<String>,
 }
 
 impl Args {
@@ -35,6 +37,7 @@ pub struct JsonConfig {
   exclude: Option<Vec<String>>,
   #[serde(rename = "sortStrategy")]
   sort_strategy: Option<String>,
+  output: Option<String>,
 }
 
 #[derive(Debug)]
@@ -45,6 +48,7 @@ pub struct Config {
   pub exclude: Vec<String>,
   pub path: PathBuf,
   pub sort_strategy: SortBy,
+  pub output: Output,
 }
 
 pub fn get_config() -> Config {
@@ -90,11 +94,13 @@ fn get_default_config() -> Config {
     ],
     path: PathBuf::from("."),
     sort_strategy: SortBy::None,
+    output: Output::Table,
   }
 }
 
 fn merge_configs(default_config: Config, json_config: JsonConfig) -> Config {
   let json_sort_strategy = resolve_sort_strategy(json_config.sort_strategy);
+  let json_output = resolve_output(json_config.output);
 
   Config {
     module: json_config.module.or(default_config.module),
@@ -103,11 +109,13 @@ fn merge_configs(default_config: Config, json_config: JsonConfig) -> Config {
     exclude: json_config.exclude.unwrap_or(default_config.exclude),
     path: default_config.path,
     sort_strategy: json_sort_strategy.unwrap_or(default_config.sort_strategy),
+    output: json_output.unwrap_or(default_config.output),
   }
 }
 
 fn apply_args_priority(config: Config, args: Args, path: PathBuf) -> Config {
   let arg_sort_strategy = resolve_sort_strategy(args.sort_strategy);
+  let arg_output = resolve_output(args.output);
 
   Config {
     include: arg_string_to_vec(args.glob).unwrap_or(config.include),
@@ -116,6 +124,7 @@ fn apply_args_priority(config: Config, args: Args, path: PathBuf) -> Config {
     exclude: config.exclude,
     path,
     sort_strategy: arg_sort_strategy.unwrap_or(config.sort_strategy),
+    output: arg_output.unwrap_or(config.output),
   }
 }
 
@@ -151,6 +160,14 @@ fn resolve_sort_strategy(sort_by: Option<String>) -> Option<SortBy> {
       Some(SortBy::Occurrences)
     }
     Some(ref s) if s.eq_ignore_ascii_case("none") => Some(SortBy::None),
+    _ => None,
+  }
+}
+
+fn resolve_output(output: Option<String>) -> Option<Output> {
+  match output {
+    Some(ref s) if s.eq_ignore_ascii_case("json") => Some(Output::Json),
+    Some(ref s) if s.eq_ignore_ascii_case("table") => Some(Output::Table),
     _ => None,
   }
 }

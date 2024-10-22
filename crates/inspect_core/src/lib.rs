@@ -1,3 +1,5 @@
+extern crate serde;
+extern crate serde_json;
 extern crate swc_common;
 extern crate swc_ecma_ast;
 extern crate swc_ecma_parser;
@@ -16,6 +18,12 @@ pub enum SortBy {
   Referenced,
   Occurrences,
   None,
+}
+
+#[derive(Debug)]
+pub enum Output {
+  Json,
+  Table,
 }
 
 pub fn inspect_module(source_code: &str) -> Vec<visitor::Inspect> {

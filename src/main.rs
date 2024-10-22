@@ -1,10 +1,11 @@
-use inspect_core::inspect_module;
+use inspect_core::{inspect_module, Inspect, Output};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use std::fs;
 
 mod config;
 #[macro_use]
 mod log;
+mod json;
 mod read_project;
 mod table;
 
@@ -30,5 +31,12 @@ fn main() {
   let deduped = inspect_core::dedupe_inspects(inspects);
   let sorted = inspect_core::sort_by(deduped, config.sort_strategy);
 
-  table::inspects(sorted);
+  output_result(sorted, config.output);
+}
+
+fn output_result(inspects: Vec<Inspect>, output: Output) {
+  match output {
+    Output::Json => json::inspects(inspects),
+    Output::Table => table::inspects(inspects),
+  }
 }

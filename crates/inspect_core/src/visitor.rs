@@ -1,14 +1,15 @@
+use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
 use swc_ecma_ast::*;
 use swc_ecma_visit::Visit;
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct RawInspect {
   pub specifier: String,
   pub module_name: String,
 }
 
-#[derive(Debug)]
+#[derive(Debug, Serialize, Deserialize)]
 pub struct Inspect {
   pub raw: RawInspect,
   pub referenced: usize,
