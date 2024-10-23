@@ -3,15 +3,25 @@ use std::collections::HashMap;
 use swc_ecma_ast::*;
 use swc_ecma_visit::Visit;
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct RawInspect {
   pub specifier: String,
+  pub local_specifier: String,
   pub module_name: String,
 }
 
 #[derive(Debug, Serialize, Deserialize)]
 pub struct Inspect {
   pub raw: RawInspect,
+  pub referenced: usize,
+  pub occurrences: usize,
+}
+
+#[derive(Debug, Serialize, Deserialize)]
+pub struct FinalInspect {
+  pub specifier: String,
+  pub module_name: String,
+  pub aliases: Vec<String>,
   pub referenced: usize,
   pub occurrences: usize,
 }
@@ -69,6 +79,7 @@ fn generate_inspect(node: &ImportDecl) -> Vec<RawInspect> {
 
   let statements = node.specifiers.iter().map(|specifier| match specifier {
     ImportSpecifier::Named(named_specifier) => {
+      let local_value = named_specifier.local.sym.to_string();
       let imported_value = named_specifier
         .imported
         .as_ref()
@@ -76,18 +87,22 @@ fn generate_inspect(node: &ImportDecl) -> Vec<RawInspect> {
           ModuleExportName::Ident(ident) => ident.sym.to_string(),
           ModuleExportName::Str(str) => str.value.to_string(),
         })
-        .unwrap_or_else(|| named_specifier.local.sym.to_string());
+        .unwrap_or_else(|| local_value.clone());
+
       RawInspect {
         specifier: imported_value,
+        local_specifier: local_value,
         module_name: node.src.value.to_string(),
       }
     }
     ImportSpecifier::Default(default_specifier) => RawInspect {
       specifier: default_specifier.local.sym.to_string(),
+      local_specifier: default_specifier.local.sym.to_string(),
       module_name: node.src.value.to_string(),
     },
     ImportSpecifier::Namespace(_) => RawInspect {
       specifier: "*".to_string(),
+      local_specifier: "*".to_string(),
       module_name: node.src.value.to_string(),
     },
   });
@@ -108,17 +123,28 @@ pub fn get_program_inspects(program: Program) -> Vec<Inspect> {
 
   let mut inspects = Vec::new();
 
-  for raw_inspect in visitor.raw_inspects {
+  for raw_inspect in visitor.raw_inspects.clone() {
+    let import_offset = if raw_inspect.specifier == raw_inspect.local_specifier
+    {
+      visitor
+        .raw_inspects
+        .clone()
+        .iter()
+        .filter(|item| item.specifier == raw_inspect.specifier)
+        .count()
+    } else {
+      1
+    };
+
     let referenced = visitor
       .reference_counts
-      .get(&raw_inspect.specifier)
-      // subtract 1 to skip self import ident
-      .map_or(0, |value| value - 1);
+      .get(&raw_inspect.local_specifier)
+      .map_or(0, |value| value - import_offset);
 
     let real_referenced = referenced
       - visitor
         .closing_reference_counts
-        .get(&raw_inspect.specifier)
+        .get(&raw_inspect.local_specifier)
         .copied()
         .unwrap_or(0);
 

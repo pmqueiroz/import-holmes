@@ -1,19 +1,30 @@
-use inspect_core::Inspect;
+use inspect_core::FinalInspect;
 use prettytable::{color, format, Attr, Cell, Row, Table};
 
-pub fn inspects(inspects: Vec<Inspect>) {
+pub fn inspects(inspects: Vec<FinalInspect>) {
   let mut table = Table::new();
 
   table.set_format(get_unicode_format());
 
-  let titles = vec!["Specifier", "Module", "Occurrences", "Referenced"];
+  let titles = vec![
+    "Specifier",
+    "Aliases",
+    "Module",
+    "Occurrences",
+    "Referenced",
+  ];
 
   table.set_titles(generate_title_row(&titles));
 
   for inspect in &inspects {
     table.add_row(Row::new(vec![
-      Cell::new(&inspect.raw.specifier),
-      Cell::new(&inspect.raw.module_name),
+      Cell::new(&inspect.specifier),
+      Cell::new(&if inspect.aliases.is_empty() {
+        "-".to_string()
+      } else {
+        inspect.aliases.join(", ")
+      }),
+      Cell::new(&inspect.module_name),
       Cell::new(&inspect.occurrences.to_string()),
       Cell::new(&inspect.referenced.to_string()),
     ]));

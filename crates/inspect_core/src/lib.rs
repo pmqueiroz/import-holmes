@@ -10,8 +10,7 @@ use std::collections::HashMap;
 mod parser;
 mod visitor;
 
-pub use visitor::Inspect;
-use visitor::RawInspect;
+pub use visitor::{FinalInspect, Inspect};
 
 #[derive(Debug)]
 pub enum SortBy {
@@ -33,8 +32,8 @@ pub fn inspect_module(source_code: &str) -> Vec<visitor::Inspect> {
   inspects
 }
 
-pub fn dedupe_inspects(inspects: Vec<Inspect>) -> Vec<Inspect> {
-  let mut merged_map: HashMap<(String, String), (usize, usize)> =
+pub fn get_final_inspects(inspects: Vec<Inspect>) -> Vec<FinalInspect> {
+  let mut merged_map: HashMap<(String, String), (usize, usize, Vec<String>)> =
     HashMap::new();
 
   for inspect in inspects {
@@ -42,30 +41,36 @@ pub fn dedupe_inspects(inspects: Vec<Inspect>) -> Vec<Inspect> {
       inspect.raw.specifier.clone(),
       inspect.raw.module_name.clone(),
     );
-    let (total_referenced, total_occurrences) =
-      merged_map.entry(key).or_insert((0, 0));
+    let (total_referenced, total_occurrences, aliases) =
+      merged_map.entry(key).or_insert((0, 0, Vec::new()));
     *total_referenced += inspect.referenced;
     *total_occurrences += inspect.occurrences;
+    if inspect.raw.local_specifier != inspect.raw.specifier
+      && !aliases.contains(&inspect.raw.local_specifier)
+    {
+      aliases.push(inspect.raw.local_specifier.clone());
+    }
   }
 
-  let merged_inspects: Vec<Inspect> = merged_map
+  let final_inspects: Vec<FinalInspect> = merged_map
     .into_iter()
     .map(
-      |((specifier, module_name), (referenced, occurrences))| Inspect {
-        raw: RawInspect {
+      |((specifier, module_name), (referenced, occurrences, aliases))| {
+        FinalInspect {
           specifier,
+          aliases,
           module_name,
-        },
-        referenced,
-        occurrences,
+          referenced,
+          occurrences,
+        }
       },
     )
     .collect();
 
-  merged_inspects
+  final_inspects
 }
 
-pub fn sort_by(inspects: Vec<Inspect>, by: SortBy) -> Vec<Inspect> {
+pub fn sort_by(inspects: Vec<FinalInspect>, by: SortBy) -> Vec<FinalInspect> {
   match by {
     SortBy::Referenced => sort_by_referenced(inspects),
     SortBy::Occurrences => sort_by_occurrences(inspects),
@@ -73,13 +78,13 @@ pub fn sort_by(inspects: Vec<Inspect>, by: SortBy) -> Vec<Inspect> {
   }
 }
 
-fn sort_by_occurrences(inspects: Vec<Inspect>) -> Vec<Inspect> {
+fn sort_by_occurrences(inspects: Vec<FinalInspect>) -> Vec<FinalInspect> {
   let mut sorted_inspects = inspects;
   sorted_inspects.sort_by_key(|inspect| std::cmp::Reverse(inspect.occurrences));
   sorted_inspects
 }
 
-fn sort_by_referenced(inspects: Vec<Inspect>) -> Vec<Inspect> {
+fn sort_by_referenced(inspects: Vec<FinalInspect>) -> Vec<FinalInspect> {
   let mut sorted_inspects = inspects;
   sorted_inspects.sort_by_key(|inspect| std::cmp::Reverse(inspect.referenced));
   sorted_inspects

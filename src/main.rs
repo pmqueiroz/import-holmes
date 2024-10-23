@@ -1,4 +1,4 @@
-use inspect_core::{inspect_module, Inspect, Output};
+use inspect_core::{inspect_module, FinalInspect, Output};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use std::fs;
 
@@ -28,13 +28,13 @@ fn main() {
     .filter(|inspect| modules_filter.contains(&inspect.raw.module_name))
     .collect();
 
-  let deduped = inspect_core::dedupe_inspects(inspects);
-  let sorted = inspect_core::sort_by(deduped, config.sort_strategy);
+  let final_inspects = inspect_core::get_final_inspects(inspects);
+  let sorted = inspect_core::sort_by(final_inspects, config.sort_strategy);
 
   output_result(sorted, config.output);
 }
 
-fn output_result(inspects: Vec<Inspect>, output: Output) {
+fn output_result(inspects: Vec<FinalInspect>, output: Output) {
   match output {
     Output::Json => json::inspects(inspects),
     Output::Table => table::inspects(inspects),

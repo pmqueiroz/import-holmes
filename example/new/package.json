@@ -1,0 +1,10 @@
+{
+   "dependencies": {
+      "react":"latest",
+      "design-system": "latest",
+      "another": "anodin"
+   },
+   "devDependencies": {
+      "a": "latest"
+   }
+}
