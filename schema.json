@@ -9,7 +9,7 @@
          },
          "minItems": 1
       },
-      "specifier": {
+      "specifiers": {
          "type": "array",
          "items": {
             "type": "string"

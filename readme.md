@@ -27,7 +27,7 @@ brew install import-holmes
 | Options | Default | Meaning | Example |
 |---------|:-------:|---------|--|
 | `-m`, `--module` | `package.json.dependencies`| Filter inspection by module's name | `-m a,b` |
-| `-s`, `--specifier` | - | Filter inspection by specifier name | `-s Button` |
+| `-s`, `--specifiers` | - | Filter inspection by specifiers name | `-s Button,Text` |
 | `-g`, `--glob` | `**/*.{ts,tsx}` | Glob to select files to inspect | `-g components/*.{js}` |
 | `-o`, `--output` | `table` | Configure the output type | `-o json` |
 | `--sort` | `none` | Sort the output by `ocurrences` or `referenced` | `--sort referenced` |
@@ -41,7 +41,7 @@ For better configuring you can also set a config file named `.holmesrc.json` fol
 {
   "$schema": "https://raw.githubusercontent.com/pmqueiroz/import-holmes/main/schema.json",
   "module": ["some-module"],
-  "specifier": ["first", "second"],
+  "specifiers": ["first", "second"],
   "include": ["**/*.{ts,tsx}"],
   "exclude": ["node_modules/**", "**/*.{spec,test}.{ts,tsx}", "**/*.d.ts"],
   "sortStrategy": "referenced",
