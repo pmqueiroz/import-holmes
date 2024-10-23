@@ -64,37 +64,6 @@ fn main() {
 
 ```
 
-### Known Issues
-
-[Import alias](https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Statements/import#aliasn) will no count as referenced.
-
-For example this module:
-
-```tsx
-import { Button as DesignSystemButton } from 'design-system'
-
-export function Page() {
-  return (
-    <div>
-      <DesignSystemButton>One</DesignSystemButton>
-      <DesignSystemButton>Two</DesignSystemButton>
-    </div>
-  )
-}
-```
-will result in:
-
-```rs
-Inspect {
-  raw: RawInspect {
-    specifier: "Button",
-    module_name: "design-system"
-  },
-  referenced: 0,
-  occurrences: 1
-}
-```
-
 <div align="center">
 
 <samp>Made with :heart: by [**Peam**][peam-url]</samp> 
