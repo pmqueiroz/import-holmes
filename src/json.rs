@@ -1,7 +1,7 @@
-use inspect_core::FinalInspect;
+use crate::InspectSummary;
 
-pub fn inspects(inspects: Vec<FinalInspect>) {
-  match serde_json::to_string(&inspects) {
+pub fn inspects(summary: InspectSummary) {
+  match serde_json::to_string(&summary) {
     Ok(json) => println!("{}", json),
     Err(e) => eprintln!("Error serializing inspects: {}", e),
   }

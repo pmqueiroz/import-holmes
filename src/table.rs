@@ -1,7 +1,8 @@
-use inspect_core::FinalInspect;
 use prettytable::{color, format, Attr, Cell, Row, Table};
 
-pub fn inspects(inspects: Vec<FinalInspect>) {
+use crate::InspectSummary;
+
+pub fn inspects(summary: InspectSummary) {
   let mut table = Table::new();
 
   table.set_format(get_unicode_format());
@@ -16,7 +17,7 @@ pub fn inspects(inspects: Vec<FinalInspect>) {
 
   table.set_titles(generate_title_row(&titles));
 
-  for inspect in &inspects {
+  for inspect in &summary.inspects {
     table.add_row(Row::new(vec![
       Cell::new(&inspect.specifier),
       Cell::new(&if inspect.aliases.is_empty() {
@@ -31,6 +32,10 @@ pub fn inspects(inspects: Vec<FinalInspect>) {
   }
 
   table.printstd();
+
+  println!("Total files found: {:?}", summary.total_files_count);
+  println!("Total imports found: {:?}", summary.total_imports_count);
+  println!("Unique imports found: {:?}", summary.unique_imports_count);
 }
 
 fn generate_title_row(titles: &[&str]) -> Row {
