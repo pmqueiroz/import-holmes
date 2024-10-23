@@ -15,6 +15,8 @@ pub struct Args {
   pub glob: Option<String>,
   #[arg(short = 'p', long = "path")]
   pub path: Option<String>,
+  #[arg(short = 's', long = "specifiers")]
+  pub specifier: Option<String>,
   #[arg(long = "sort")]
   pub sort_strategy: Option<String>,
   #[arg(short = 'm', long = "module")]
@@ -32,7 +34,7 @@ impl Args {
 #[derive(Debug, Deserialize, Serialize)]
 pub struct JsonConfig {
   module: Option<Vec<String>>,
-  specifier: Option<Vec<String>>,
+  specifiers: Option<Vec<String>>,
   include: Option<Vec<String>>,
   exclude: Option<Vec<String>>,
   #[serde(rename = "sortStrategy")]
@@ -43,7 +45,7 @@ pub struct JsonConfig {
 #[derive(Debug)]
 pub struct Config {
   pub module: Option<Vec<String>>,
-  pub specifier: Option<Vec<String>>,
+  pub specifiers: Option<Vec<String>>,
   pub include: Vec<String>,
   pub exclude: Vec<String>,
   pub path: PathBuf,
@@ -85,7 +87,7 @@ fn read_config(config_path: &PathBuf) -> JsonConfig {
 fn get_default_config() -> Config {
   Config {
     module: None,
-    specifier: None,
+    specifiers: None,
     include: vec!["**/*.{ts,tsx}".to_string()],
     exclude: vec![
       "node_modules/**".to_string(),
@@ -104,7 +106,7 @@ fn merge_configs(default_config: Config, json_config: JsonConfig) -> Config {
 
   Config {
     module: json_config.module.or(default_config.module),
-    specifier: json_config.specifier.or(default_config.specifier),
+    specifiers: json_config.specifiers.or(default_config.specifiers),
     include: json_config.include.unwrap_or(default_config.include),
     exclude: json_config.exclude.unwrap_or(default_config.exclude),
     path: default_config.path,
@@ -116,11 +118,12 @@ fn merge_configs(default_config: Config, json_config: JsonConfig) -> Config {
 fn apply_args_priority(config: Config, args: Args, path: PathBuf) -> Config {
   let arg_sort_strategy = resolve_sort_strategy(args.sort_strategy);
   let arg_output = resolve_output(args.output);
+  let arg_specifiers = resolve_specifiers(args.specifier);
 
   Config {
     include: arg_string_to_vec(args.glob).unwrap_or(config.include),
     module: arg_string_to_vec(args.filter_module).or(config.module),
-    specifier: config.specifier,
+    specifiers: arg_specifiers.or(config.specifiers),
     exclude: config.exclude,
     path,
     sort_strategy: arg_sort_strategy.unwrap_or(config.sort_strategy),
@@ -170,4 +173,11 @@ fn resolve_output(output: Option<String>) -> Option<Output> {
     Some(ref s) if s.eq_ignore_ascii_case("table") => Some(Output::Table),
     _ => None,
   }
+}
+
+fn resolve_specifiers(
+  specifiers_string: Option<String>,
+) -> Option<Vec<String>> {
+  specifiers_string
+    .map(|s| s.split(',').map(|s| s.trim().to_string()).collect())
 }

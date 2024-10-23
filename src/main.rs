@@ -28,6 +28,16 @@ fn main() {
     .filter(|inspect| modules_filter.contains(&inspect.raw.module_name))
     .collect();
 
+  let inspects: Vec<inspect_core::Inspect> =
+    if let Some(specifiers) = &config.specifiers {
+      inspects
+        .into_iter()
+        .filter(|inspect| specifiers.contains(&inspect.raw.specifier))
+        .collect()
+    } else {
+      inspects
+    };
+
   let final_inspects = inspect_core::get_final_inspects(inspects);
   let sorted = inspect_core::sort_by(final_inspects, config.sort_strategy);
 
