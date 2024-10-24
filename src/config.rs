@@ -10,18 +10,27 @@ use crate::fatal;
 const CONFIG_FILE_NAME: &str = ".holmesrc.json";
 
 #[derive(Parser, Debug)]
+#[command(version, about, long_about = None)]
 pub struct Args {
-  #[arg(short = 'g', long = "glob")]
+  #[arg(short = 'g', long = "glob", help = "Glob to select files to inspect")]
   pub glob: Option<String>,
-  #[arg(short = 'p', long = "path")]
+  #[arg(short = 'p', long = "path", help = "Path to search files to inspect")]
   pub path: Option<String>,
-  #[arg(short = 's', long = "specifiers")]
+  #[arg(
+    short = 's',
+    long = "specifiers",
+    help = "Identifiers to filter from imports"
+  )]
   pub specifier: Option<String>,
-  #[arg(long = "sort")]
+  #[arg(long = "sort", help = "Sort by strategy")]
   pub sort_strategy: Option<String>,
-  #[arg(short = 'm', long = "module")]
+  #[arg(
+    short = 'm',
+    long = "module",
+    help = "Filter inspection by module's name"
+  )]
   pub filter_module: Option<String>,
-  #[arg(short = 'o', long = "output")]
+  #[arg(short = 'o', long = "output", help = "Output type")]
   pub output: Option<String>,
 }
 
