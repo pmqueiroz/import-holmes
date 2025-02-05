@@ -1,4 +1,5 @@
 use clap::Parser;
+use core::Language;
 use inspect_typescript::{Output, SortBy};
 use serde::{Deserialize, Serialize};
 use std::env;
@@ -32,6 +33,11 @@ pub struct Args {
   pub filter_module: Option<String>,
   #[arg(short = 'o', long = "output", help = "Output type")]
   pub output: Option<String>,
+  #[arg(
+    long = "language",
+    help = "Language to inspect (typescript or kotlin)"
+  )]
+  pub language: Option<String>,
 }
 
 impl Args {
@@ -49,6 +55,7 @@ pub struct JsonConfig {
   #[serde(rename = "sortStrategy")]
   sort_strategy: Option<String>,
   output: Option<String>,
+  language: Option<String>,
 }
 
 #[derive(Debug)]
@@ -60,6 +67,7 @@ pub struct Config {
   pub path: PathBuf,
   pub sort_strategy: SortBy,
   pub output: Output,
+  pub language: Language,
 }
 
 pub fn get_config() -> Config {
@@ -73,7 +81,7 @@ pub fn get_config() -> Config {
   let default_config = get_default_config();
   let config_path = path.join(CONFIG_FILE_NAME);
 
-  if !config_file_exits(&config_path) {
+  if !config_file_exists(&config_path) {
     return apply_args_priority(default_config, args, path);
   }
 
@@ -83,7 +91,7 @@ pub fn get_config() -> Config {
   apply_args_priority(resolved_config, args, path)
 }
 
-fn config_file_exits(config_path: &PathBuf) -> bool {
+fn config_file_exists(config_path: &PathBuf) -> bool {
   config_path.exists()
 }
 
@@ -106,12 +114,14 @@ fn get_default_config() -> Config {
     path: PathBuf::from("."),
     sort_strategy: SortBy::None,
     output: Output::Table,
+    language: Language::TypeScript,
   }
 }
 
 fn merge_configs(default_config: Config, json_config: JsonConfig) -> Config {
   let json_sort_strategy = resolve_sort_strategy(json_config.sort_strategy);
   let json_output = resolve_output(json_config.output);
+  let json_language = resolve_language(json_config.language);
 
   Config {
     module: json_config.module.or(default_config.module),
@@ -121,6 +131,7 @@ fn merge_configs(default_config: Config, json_config: JsonConfig) -> Config {
     path: default_config.path,
     sort_strategy: json_sort_strategy.unwrap_or(default_config.sort_strategy),
     output: json_output.unwrap_or(default_config.output),
+    language: json_language.unwrap_or(default_config.language),
   }
 }
 
@@ -128,6 +139,7 @@ fn apply_args_priority(config: Config, args: Args, path: PathBuf) -> Config {
   let arg_sort_strategy = resolve_sort_strategy(args.sort_strategy);
   let arg_output = resolve_output(args.output);
   let arg_specifiers = resolve_specifiers(args.specifier);
+  let arg_language = resolve_language(args.language);
 
   Config {
     include: arg_string_to_vec(args.glob).unwrap_or(config.include),
@@ -137,14 +149,12 @@ fn apply_args_priority(config: Config, args: Args, path: PathBuf) -> Config {
     path,
     sort_strategy: arg_sort_strategy.unwrap_or(config.sort_strategy),
     output: arg_output.unwrap_or(config.output),
+    language: arg_language.unwrap_or(config.language),
   }
 }
 
 fn arg_string_to_vec(arg: Option<String>) -> Option<Vec<String>> {
-  match arg {
-    Some(arg_piece) => Some(arg_piece.split(',').map(String::from).collect()),
-    None => None,
-  }
+  arg.map(|arg_piece| arg_piece.split(',').map(String::from).collect())
 }
 
 fn resolve_path(path_opt: Option<String>) -> PathBuf {
@@ -189,4 +199,8 @@ fn resolve_specifiers(
 ) -> Option<Vec<String>> {
   specifiers_string
     .map(|s| s.split(',').map(|s| s.trim().to_string()).collect())
+}
+
+fn resolve_language(language: Option<String>) -> Option<Language> {
+  language.and_then(|lang| Language::from_str(&lang))
 }
