@@ -1,5 +1,5 @@
 [package]
-name          = "inspect_core"
+name          = "inspect_typescript"
 license       = "MIT"
 repository    = "https://github.com/pmqueiroz/import-holmes.git"
 version       = "0.1.0"
