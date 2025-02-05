@@ -5,9 +5,9 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.ui.Modifier
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import co.design.system.Button
+import co.design.system.layout.Box
 
 internal object MainPage : Page() {
   @Composable
