@@ -1,0 +1,12 @@
+[package]
+name          = "inspect_kotlin"
+license       = "MIT"
+repository    = "https://github.com/pmqueiroz/import-holmes.git"
+version       = "0.1.0"
+
+[build-dependencies]
+cc="*"
+
+[dependencies]
+tree-sitter = "0.22.6"
+tree-sitter-kotlin = "0.3.8"
