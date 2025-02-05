@@ -1,12 +1,12 @@
+extern crate core;
 extern crate serde;
 extern crate serde_json;
-extern crate shared;
 extern crate swc_common;
 extern crate swc_ecma_ast;
 extern crate swc_ecma_parser;
 extern crate swc_ecma_visit;
 
-use shared::{FinalInspect, Inspect, Inspector};
+use core::{FinalInspect, Inspect, Inspector};
 use std::collections::HashMap;
 use std::path::PathBuf;
 
