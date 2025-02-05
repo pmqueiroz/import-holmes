@@ -1,6 +1,7 @@
 extern crate serde;
 
 use serde::{Deserialize, Serialize};
+use std::fmt;
 use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
@@ -17,13 +18,40 @@ pub struct Inspect {
   pub occurrences: usize,
 }
 
-#[derive(Debug, Serialize, Deserialize)]
+#[derive(Debug, Clone, Serialize, Deserialize, PartialEq, Eq, Hash)]
 pub struct FinalInspect {
   pub specifier: String,
   pub module_name: String,
   pub aliases: Vec<String>,
   pub referenced: usize,
   pub occurrences: usize,
+}
+
+#[derive(Debug, Clone, PartialEq, Eq, Hash)]
+pub enum Language {
+  TypeScript,
+  Kotlin,
+}
+
+impl Language {
+  pub fn from_str(s: &str) -> Option<Self> {
+    if s.eq_ignore_ascii_case("typescript") {
+      Some(Language::TypeScript)
+    } else if s.eq_ignore_ascii_case("kotlin") {
+      Some(Language::Kotlin)
+    } else {
+      None
+    }
+  }
+}
+
+impl fmt::Display for Language {
+  fn fmt(&self, f: &mut fmt::Formatter<'_>) -> fmt::Result {
+    match self {
+      Language::TypeScript => write!(f, "TypeScript"),
+      Language::Kotlin => write!(f, "Kotlin"),
+    }
+  }
 }
 
 pub trait Inspector: Send + Sync {

@@ -1,4 +1,4 @@
-use core::{FinalInspect, Inspect, Inspector};
+use core::{FinalInspect, Inspect, Inspector, Language};
 use inspect_typescript::{Output, TypescriptInspector};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
@@ -24,18 +24,18 @@ pub struct InspectSummary {
 fn main() -> Result<(), Box<dyn Error>> {
   let config = config::get_config();
 
-  let language = "typescript";
+  let language = Language::TypeScript;
 
-  let inspectors: HashMap<&str, Box<dyn Inspector>> = vec![(
-    "typescript",
+  let inspectors: HashMap<Language, Box<dyn Inspector>> = vec![(
+    Language::TypeScript,
     Box::new(TypescriptInspector) as Box<dyn Inspector>,
   )]
   .into_iter()
   .collect();
 
   let inspector = inspectors
-    .get(language)
-    .ok_or_else(|| format!("Language '{}' not supported.", language))?;
+    .get(&config.language)
+    .ok_or_else(|| format!("config.language '{}' not supported.", language))?;
 
   let package = read_project::read_package_json(&config.path);
   let dependencies = read_project::get_dependencies(&package);
