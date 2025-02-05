@@ -1,6 +1,7 @@
-use inspect_core::{inspect_module, FinalInspect, Output};
+use inspect_core::{inspect_module, Output};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
+use shared::{FinalInspect, Inspect};
 use std::fs;
 
 mod config;
@@ -28,7 +29,7 @@ fn main() {
 
   let total_files_count = files.iter().count();
 
-  let inspects: Vec<inspect_core::Inspect> = files
+  let inspects: Vec<Inspect> = files
     .par_iter()
     .map(|path| {
       let contents = fs::read_to_string(path)
@@ -39,15 +40,14 @@ fn main() {
     .filter(|inspect| modules_filter.contains(&inspect.raw.module_name))
     .collect();
 
-  let inspects: Vec<inspect_core::Inspect> =
-    if let Some(specifiers) = &config.specifiers {
-      inspects
-        .into_iter()
-        .filter(|inspect| specifiers.contains(&inspect.raw.specifier))
-        .collect()
-    } else {
-      inspects
-    };
+  let inspects: Vec<Inspect> = if let Some(specifiers) = &config.specifiers {
+    inspects
+      .into_iter()
+      .filter(|inspect| specifiers.contains(&inspect.raw.specifier))
+      .collect()
+  } else {
+    inspects
+  };
 
   let total_imports_count = inspects.iter().count();
 

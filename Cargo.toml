@@ -22,10 +22,11 @@ members = [
 ]
 
 [dependencies]
+inspect_core = { path = "crates/inspect_core" }
+inspect_kotlin = { path = "crates/inspect_kotlin" }
+shared = { path = "crates/shared" }
 clap = { version = "4.1.11", features = ["derive"] }
 globwalk = "0.8.1"
-inspect_core = { version = "0.1.0", path = "crates/inspect_core" }
-inspect_kotlin = { path = "crates/inspect_kotlin" }
 once_cell = "1.19.0"
 prettytable = "0.10.0"
 rayon = "1.7.0"

@@ -1,30 +1,7 @@
-use serde::{Deserialize, Serialize};
+use shared::{Inspect, RawInspect};
 use std::collections::HashMap;
 use swc_ecma_ast::*;
 use swc_ecma_visit::Visit;
-
-#[derive(Debug, Serialize, Deserialize, Clone)]
-pub struct RawInspect {
-  pub specifier: String,
-  pub local_specifier: String,
-  pub module_name: String,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct Inspect {
-  pub raw: RawInspect,
-  pub referenced: usize,
-  pub occurrences: usize,
-}
-
-#[derive(Debug, Serialize, Deserialize)]
-pub struct FinalInspect {
-  pub specifier: String,
-  pub module_name: String,
-  pub aliases: Vec<String>,
-  pub referenced: usize,
-  pub occurrences: usize,
-}
 
 #[derive(Debug)]
 struct ImportVisitor {

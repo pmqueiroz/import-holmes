@@ -1,16 +1,16 @@
 extern crate serde;
 extern crate serde_json;
+extern crate shared;
 extern crate swc_common;
 extern crate swc_ecma_ast;
 extern crate swc_ecma_parser;
 extern crate swc_ecma_visit;
 
+use shared::{FinalInspect, Inspect};
 use std::collections::HashMap;
 
 mod parser;
 mod visitor;
-
-pub use visitor::{FinalInspect, Inspect};
 
 #[derive(Debug)]
 pub enum SortBy {
@@ -25,7 +25,7 @@ pub enum Output {
   Table,
 }
 
-pub fn inspect_module(source_code: &str) -> Vec<visitor::Inspect> {
+pub fn inspect_module(source_code: &str) -> Vec<Inspect> {
   let program = parser::parse_program(source_code);
   let inspects = visitor::get_program_inspects(program);
 
