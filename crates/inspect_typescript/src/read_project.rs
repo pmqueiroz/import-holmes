@@ -1,6 +1,4 @@
-extern crate globwalk;
-
-use crate::fatal;
+use core::glob;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
@@ -17,10 +15,11 @@ pub fn read_package_json(cwd: &PathBuf) -> Package {
   let file_path = cwd.join("package.json");
 
   if !file_path.exists() {
-    fatal!(
+    eprintln!(
       "File package.json not found in {} make sure it's a node project",
       cwd.display()
     );
+    std::process::exit(1);
   }
 
   let file =
@@ -33,9 +32,9 @@ pub fn read_package_json(cwd: &PathBuf) -> Package {
 }
 
 pub fn get_module_files(cwd: &PathBuf, include: Vec<String>) -> Vec<String> {
-  let mut paths: Vec<String> = Vec::new();
   let mut patterns = include.clone();
 
+  let include_patterns = vec!["**/*.{ts,tsx}".to_string()];
   let mut ignore_patterns = vec![
     "node_modules/*".to_string(),
     "**/*.{spec,test}.{ts,tsx}".to_string(),
@@ -45,22 +44,9 @@ pub fn get_module_files(cwd: &PathBuf, include: Vec<String>) -> Vec<String> {
   ignore_patterns.iter_mut().for_each(|s| s.insert(0, '!'));
 
   patterns.extend(ignore_patterns);
+  patterns.extend(include_patterns);
 
-  let glob_paths: Vec<globwalk::DirEntry> =
-    globwalk::GlobWalkerBuilder::from_patterns(cwd.clone(), &patterns)
-      .build()
-      .unwrap()
-      .into_iter()
-      .filter_map(Result::ok)
-      .collect();
-
-  for path in glob_paths {
-    if let Some(pathname) = path.path().to_str() {
-      paths.push(pathname.to_string());
-    }
-  }
-
-  paths
+  glob(cwd, patterns)
 }
 
 pub fn get_dependencies(package: &Package) -> Vec<String> {
