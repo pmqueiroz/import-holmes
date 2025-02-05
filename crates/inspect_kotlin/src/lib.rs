@@ -1,7 +1,7 @@
 extern crate core;
 extern crate tree_sitter;
 
-use core::{Inspect, Inspector};
+use core::{glob, Inspect, Inspector};
 use std::path::PathBuf;
 use tree_sitter::{Parser, TreeCursor};
 
@@ -18,12 +18,12 @@ impl Inspector for KotlinInspector {
     vec![]
   }
 
-  fn get_files(&self, _cwd: &PathBuf, _include: Vec<String>) -> Vec<String> {
-    vec![]
+  fn get_files(&self, cwd: &PathBuf, include: Vec<String>) -> Vec<String> {
+    get_files(cwd, include)
   }
 }
 
-pub fn inspect_file(source_code: &str) {
+fn inspect_file(source_code: &str) {
   let mut parser = Parser::new();
   parser
     .set_language(&tree_sitter_kotlin::language())
@@ -53,4 +53,24 @@ pub fn inspect_file(source_code: &str) {
   }
 
   visit_imports(&mut cursor, source_code);
+}
+
+fn get_files(cwd: &PathBuf, include: Vec<String>) -> Vec<String> {
+  let mut patterns = include.clone();
+
+  let include_patterns = vec!["**/*.kt".to_string()];
+  let mut ignore_patterns = vec![
+    "build/*".to_string(),
+    "out/*".to_string(),
+    "**/*Test.kt".to_string(),
+    "**/*.generated.kt".to_string(),
+    "**/*.kts".to_string(),
+  ];
+
+  ignore_patterns.iter_mut().for_each(|s| s.insert(0, '!'));
+
+  patterns.extend(ignore_patterns);
+  patterns.extend(include_patterns);
+
+  glob(cwd, patterns)
 }

@@ -104,12 +104,8 @@ fn get_default_config() -> Config {
   Config {
     module: None,
     specifiers: None,
-    include: vec!["**/*.{ts,tsx}".to_string()],
-    exclude: vec![
-      "node_modules/**".to_string(),
-      "**/*.{spec,test}.{ts,tsx}".to_string(),
-      "**/*.d.ts".to_string(),
-    ],
+    include: vec![],
+    exclude: vec![],
     path: PathBuf::from("."),
     sort_strategy: SortBy::None,
     output: Output::Table,
