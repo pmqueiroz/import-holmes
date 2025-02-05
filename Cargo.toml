@@ -1,13 +1,13 @@
 [package]
 name = "import-holmes"
-version = "0.4.0"
+version = "0.5.0"
 authors = ["Peam <contact@pmqueiroz.dev>"]
-description = "A tool to inspect Javascript/Typescript projects imports"
+description = "A tool to inspect projects imports"
 license = "MIT"
 readme = "readme.md"
 homepage = "https://github.com/pmqueiroz/import-holmes"
 repository = "https://github.com/pmqueiroz/import-holmes"
-keywords = ["es3", "es5", "es2015", "es2016", "es2017", "es2018", "es2019", "es2020", "es2021", "es2022", "typescript", "dependencies", "dependency", "module"]
+keywords = ["es3", "es5", "es2015", "es2016", "es2017", "es2018", "es2019", "es2020", "es2021", "es2022", "typescript", "dependencies", "dependency", "module", "kotlin"]
 categories = ["command-line-utilities"]
 edition = "2021"
 
