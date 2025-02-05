@@ -60,4 +60,6 @@ pub trait Inspector: Send + Sync {
   fn to_final_inspects(&self, inspects: Vec<Inspect>) -> Vec<FinalInspect>;
 
   fn get_dependencies(&self, cwd: &PathBuf) -> Vec<String>;
+
+  fn get_files(&self, cwd: &PathBuf, include: Vec<String>) -> Vec<String>;
 }

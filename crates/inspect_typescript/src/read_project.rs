@@ -1,6 +1,5 @@
 extern crate globwalk;
 
-use crate::fatal;
 use serde::{Deserialize, Serialize};
 use serde_json;
 use std::collections::HashMap;
@@ -17,10 +16,11 @@ pub fn read_package_json(cwd: &PathBuf) -> Package {
   let file_path = cwd.join("package.json");
 
   if !file_path.exists() {
-    fatal!(
+    eprintln!(
       "File package.json not found in {} make sure it's a node project",
       cwd.display()
     );
+    std::process::exit(1);
   }
 
   let file =

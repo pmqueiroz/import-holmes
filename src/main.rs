@@ -10,7 +10,6 @@ mod config;
 #[macro_use]
 mod log;
 mod json;
-mod read_project;
 mod table;
 
 #[derive(Debug, Serialize, Deserialize)]
@@ -37,11 +36,10 @@ fn main() -> Result<(), Box<dyn Error>> {
     .get(&config.language)
     .ok_or_else(|| format!("config.language '{}' not supported.", language))?;
 
-  let package = read_project::read_package_json(&config.path);
-  let dependencies = read_project::get_dependencies(&package);
+  let dependencies = inspector.get_dependencies(&config.path);
   let modules_filter = config.module.clone().unwrap_or(dependencies);
 
-  let files = read_project::get_module_files(&config.path, config.include);
+  let files = inspector.get_files(&config.path, config.include);
   let total_files_count = files.iter().count();
 
   let inspects: Vec<Inspect> = files
