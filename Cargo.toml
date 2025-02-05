@@ -18,7 +18,9 @@ name = "import-holmes"
 
 [workspace]
 members = [
+  "crates/core",
   "crates/inspect_typescript",
+  "crates/inspect_kotlin",
 ]
 
 [dependencies]
