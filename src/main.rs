@@ -63,7 +63,9 @@ fn main() -> Result<(), Box<dyn Error>> {
     .flatten()
     .filter(|inspect| {
       modules_filter == ["*"]
-        || modules_filter.contains(&inspect.raw.module_name)
+        || modules_filter
+          .iter()
+          .any(|filter| inspect.raw.module_name.starts_with(filter))
     })
     .collect();
 
