@@ -1,4 +1,5 @@
 extern crate core;
+extern crate rayon;
 extern crate serde;
 extern crate serde_json;
 extern crate swc_common;
@@ -11,6 +12,7 @@ use std::collections::HashMap;
 use std::path::PathBuf;
 
 mod parser;
+mod read_project;
 mod visitor;
 
 #[derive(Debug)]
@@ -38,7 +40,13 @@ impl Inspector for TypescriptInspector {
   }
 
   fn get_dependencies(&self, _cwd: &PathBuf) -> Vec<String> {
-    Vec::new()
+    let package = read_project::read_package_json(_cwd);
+
+    read_project::get_dependencies(&package)
+  }
+
+  fn get_files(&self, cwd: &PathBuf, include: Vec<String>) -> Vec<String> {
+    read_project::get_module_files(cwd, include)
   }
 }
 
