@@ -72,7 +72,7 @@ impl fmt::Display for Language {
 pub trait Inspector: Send + Sync {
   fn inspect(&self, content: String) -> Vec<Inspect>;
 
-  fn get_dependencies(&self, cwd: &PathBuf) -> Vec<String>;
+  fn get_modules_filter(&self, cwd: &PathBuf) -> Vec<String>;
 
   fn get_files(&self, cwd: &PathBuf, include: Vec<String>) -> Vec<String>;
 }

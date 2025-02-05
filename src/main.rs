@@ -46,7 +46,7 @@ fn main() -> Result<(), Box<dyn Error>> {
     .get(&config.language)
     .ok_or_else(|| format!("config.language '{}' not supported.", language))?;
 
-  let dependencies = inspector.get_dependencies(&config.path);
+  let dependencies = inspector.get_modules_filter(&config.path);
   let modules_filter = config.module.clone().unwrap_or(dependencies);
 
   let files = inspector.get_files(&config.path, config.include);
@@ -61,7 +61,10 @@ fn main() -> Result<(), Box<dyn Error>> {
       inspector.inspect(contents)
     })
     .flatten()
-    .filter(|inspect| modules_filter.contains(&inspect.raw.module_name))
+    .filter(|inspect| {
+      modules_filter == ["*"]
+        || modules_filter.contains(&inspect.raw.module_name)
+    })
     .collect();
 
   let inspects: Vec<Inspect> = if let Some(specifiers) = &config.specifiers {

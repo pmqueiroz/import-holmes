@@ -14,8 +14,8 @@ impl Inspector for KotlinInspector {
     vec![]
   }
 
-  fn get_dependencies(&self, _cwd: &PathBuf) -> Vec<String> {
-    vec![]
+  fn get_modules_filter(&self, _cwd: &PathBuf) -> Vec<String> {
+    vec!["*".to_string()]
   }
 
   fn get_files(&self, cwd: &PathBuf, include: Vec<String>) -> Vec<String> {

@@ -21,7 +21,7 @@ impl Inspector for TypescriptInspector {
     inspect_module(&content)
   }
 
-  fn get_dependencies(&self, cwd: &PathBuf) -> Vec<String> {
+  fn get_modules_filter(&self, cwd: &PathBuf) -> Vec<String> {
     let package = read_project::read_package_json(cwd);
 
     read_project::get_dependencies(&package)
