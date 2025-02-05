@@ -1,6 +1,7 @@
 extern crate serde;
 
 use serde::{Deserialize, Serialize};
+use std::path::PathBuf;
 
 #[derive(Debug, Serialize, Deserialize, Clone)]
 pub struct RawInspect {
@@ -23,4 +24,12 @@ pub struct FinalInspect {
   pub aliases: Vec<String>,
   pub referenced: usize,
   pub occurrences: usize,
+}
+
+pub trait Inspector: Send + Sync {
+  fn inspect(&self, content: String) -> Vec<Inspect>;
+
+  fn to_final_inspects(&self, inspects: Vec<Inspect>) -> Vec<FinalInspect>;
+
+  fn get_dependencies(&self, cwd: &PathBuf) -> Vec<String>;
 }

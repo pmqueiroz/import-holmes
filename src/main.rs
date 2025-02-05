@@ -1,7 +1,9 @@
-use inspect_core::{inspect_module, Output};
+use inspect_core::{Output, TypescriptInspector};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
-use shared::{FinalInspect, Inspect};
+use shared::{FinalInspect, Inspect, Inspector};
+use std::collections::HashMap;
+use std::error::Error;
 use std::fs;
 
 mod config;
@@ -19,14 +21,27 @@ pub struct InspectSummary {
   unique_imports_count: usize,
 }
 
-fn main() {
+fn main() -> Result<(), Box<dyn Error>> {
   let config = config::get_config();
+
+  let language = "typescript";
+
+  let inspectors: HashMap<&str, Box<dyn Inspector>> = vec![(
+    "typescript",
+    Box::new(TypescriptInspector) as Box<dyn Inspector>,
+  )]
+  .into_iter()
+  .collect();
+
+  let inspector = inspectors
+    .get(language)
+    .ok_or_else(|| format!("Language '{}' not supported.", language))?;
+
   let package = read_project::read_package_json(&config.path);
   let dependencies = read_project::get_dependencies(&package);
   let modules_filter = config.module.clone().unwrap_or(dependencies);
 
   let files = read_project::get_module_files(&config.path, config.include);
-
   let total_files_count = files.iter().count();
 
   let inspects: Vec<Inspect> = files
@@ -34,7 +49,8 @@ fn main() {
     .map(|path| {
       let contents = fs::read_to_string(path)
         .expect("Should have been able to read the file");
-      inspect_module(&contents)
+
+      inspector.inspect(contents)
     })
     .flatten()
     .filter(|inspect| modules_filter.contains(&inspect.raw.module_name))
@@ -63,6 +79,8 @@ fn main() {
   };
 
   output_result(summary, config.output);
+
+  Ok(())
 }
 
 fn output_result(summary: InspectSummary, output: Output) {
