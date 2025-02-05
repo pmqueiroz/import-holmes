@@ -56,6 +56,12 @@ For better configuring you can also set a config file named `.holmesrc.json` fol
 }
 ```
 
+
+## Demo
+
+![demo](./.github/demo.gif)
+
+
 <div align="center">
 
 <samp>Made with :heart: by [**Peam**][peam-url]</samp> 
