@@ -6,7 +6,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Column // Some comment
 import co.design.system.Button as DesignSystemButton
 
 internal object MainPage : Page() {

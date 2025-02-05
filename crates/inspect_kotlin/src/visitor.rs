@@ -45,9 +45,9 @@ impl ImportVisitor {
       .unwrap_or_default();
 
     let (module_name, specifier) = split_module_specifier(import_identifier);
-
     let import_alias = node
       .child(2)
+      .filter(|n| n.kind() == "import_alias")
       .map(|n| n.utf8_text(source_code.as_bytes()).unwrap().to_string())
       .map(|alias| alias.trim_start_matches("as ").to_string());
 
