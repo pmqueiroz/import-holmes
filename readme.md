@@ -6,9 +6,14 @@
 
 <div align="center">
 
-<samp> **Import Holmes** is a tool to inspect Javascript/Typescript projects imports</samp> 
+<samp> **Import Holmes** is a tool to inspect projects imports.</samp>
 
 </div>
+
+## Languages Supported
+- [x] TypeScript
+- [x] JavaScript
+- [x] Kotlin
 
 > **Warning** this tool isn't in a stable version and can change
 at any moment, check [issues][issues-url] page to check futures features and current problems
@@ -26,11 +31,12 @@ brew install import-holmes
 
 | Options | Default | Meaning | Example |
 |---------|:-------:|---------|--|
-| `-m`, `--module` | `package.json.dependencies`| Filter inspection by module's name | `-m a,b` |
+| `-m`, `--module` | ts/js: `package.json.dependencies` kt: `*`| Filter inspection by module's name | `-m a,b` |
 | `-s`, `--specifiers` | - | Filter inspection by specifiers name | `-s Button,Text` |
-| `-g`, `--glob` | `**/*.{ts,tsx}` | Glob to select files to inspect | `-g components/*.{js}` |
+| `-g`, `--glob` | ts/js: `**/*.{ts,tsx}` kt: `**/*.kt` | Glob to select files to inspect | `-g components/*.{js}` |
 | `-o`, `--output` | `table` | Configure the output type | `-o json` |
 | `--sort` | `none` | Sort the output by `ocurrences` or `referenced` | `--sort referenced` |
+| `--language` | `typescript` | Select which language parser use | `--language kotlin` |
 
 #### Config File
 
@@ -45,23 +51,9 @@ For better configuring you can also set a config file named `.holmesrc.json` fol
   "include": ["**/*.{ts,tsx}"],
   "exclude": ["node_modules/**", "**/*.{spec,test}.{ts,tsx}", "**/*.d.ts"],
   "sortStrategy": "referenced",
-  "output": "json"
+  "output": "json",
+  "language": "typescript
 }
-```
-
-### Core
-
-```rs
-use inspect_core::{inspect_module};
-use std::fs;
-
-fn main() {
-  let module = fs::read_to_string("index.js").expect("File does not exits");
-  let inspect: inspect_core::Inspect = inspect_module(&module);
-
-  println!("{:#?}", inspect)
-}
-
 ```
 
 <div align="center">
