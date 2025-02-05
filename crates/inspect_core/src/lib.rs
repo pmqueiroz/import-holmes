@@ -6,8 +6,9 @@ extern crate swc_ecma_ast;
 extern crate swc_ecma_parser;
 extern crate swc_ecma_visit;
 
-use shared::{FinalInspect, Inspect};
+use shared::{FinalInspect, Inspect, Inspector};
 use std::collections::HashMap;
+use std::path::PathBuf;
 
 mod parser;
 mod visitor;
@@ -23,6 +24,22 @@ pub enum SortBy {
 pub enum Output {
   Json,
   Table,
+}
+
+pub struct TypescriptInspector;
+
+impl Inspector for TypescriptInspector {
+  fn inspect(&self, content: String) -> Vec<Inspect> {
+    inspect_module(&content)
+  }
+
+  fn to_final_inspects(&self, inspects: Vec<Inspect>) -> Vec<FinalInspect> {
+    get_final_inspects(inspects)
+  }
+
+  fn get_dependencies(&self, _cwd: &PathBuf) -> Vec<String> {
+    Vec::new()
+  }
 }
 
 pub fn inspect_module(source_code: &str) -> Vec<Inspect> {
