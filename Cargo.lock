@@ -148,6 +148,7 @@ dependencies = [
 name = "core"
 version = "0.1.0"
 dependencies = [
+ "globwalk",
  "serde",
  "serde_json",
 ]
@@ -464,7 +465,6 @@ name = "inspect_typescript"
 version = "0.1.0"
 dependencies = [
  "core",
- "globwalk",
  "rayon",
  "serde",
  "serde_json",
