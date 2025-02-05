@@ -1,5 +1,5 @@
 use clap::Parser;
-use inspect_core::{Output, SortBy};
+use inspect_typescript::{Output, SortBy};
 use serde::{Deserialize, Serialize};
 use std::env;
 use std::fs;

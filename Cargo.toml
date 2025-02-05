@@ -18,11 +18,11 @@ name = "import-holmes"
 
 [workspace]
 members = [
-  "crates/inspect_core",
+  "crates/inspect_typescript",
 ]
 
 [dependencies]
-inspect_core = { path = "crates/inspect_core" }
+inspect_typescript = { path = "crates/inspect_typescript" }
 inspect_kotlin = { path = "crates/inspect_kotlin" }
 core = { path = "crates/core" }
 clap = { version = "4.1.11", features = ["derive"] }

@@ -1,5 +1,5 @@
 use core::{FinalInspect, Inspect, Inspector};
-use inspect_core::{Output, TypescriptInspector};
+use inspect_typescript::{Output, TypescriptInspector};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
 use std::collections::HashMap;
@@ -67,9 +67,10 @@ fn main() -> Result<(), Box<dyn Error>> {
 
   let total_imports_count = inspects.iter().count();
 
-  let final_inspects = inspect_core::get_final_inspects(inspects);
+  let final_inspects = inspect_typescript::get_final_inspects(inspects);
   let unique_imports_count = final_inspects.iter().count();
-  let sorted = inspect_core::sort_by(final_inspects, config.sort_strategy);
+  let sorted =
+    inspect_typescript::sort_by(final_inspects, config.sort_strategy);
 
   let summary = InspectSummary {
     inspects: sorted,

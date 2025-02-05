@@ -440,26 +440,13 @@ dependencies = [
  "clap",
  "core",
  "globwalk",
- "inspect_core",
  "inspect_kotlin",
+ "inspect_typescript",
  "once_cell",
  "prettytable",
  "rayon",
  "serde",
  "serde_json",
-]
-
-[[package]]
-name = "inspect_core"
-version = "0.1.0"
-dependencies = [
- "core",
- "serde",
- "serde_json",
- "swc_common",
- "swc_ecma_ast",
- "swc_ecma_parser",
- "swc_ecma_visit",
 ]
 
 [[package]]
@@ -469,6 +456,19 @@ dependencies = [
  "cc",
  "tree-sitter",
  "tree-sitter-kotlin",
+]
+
+[[package]]
+name = "inspect_typescript"
+version = "0.1.0"
+dependencies = [
+ "core",
+ "serde",
+ "serde_json",
+ "swc_common",
+ "swc_ecma_ast",
+ "swc_ecma_parser",
+ "swc_ecma_visit",
 ]
 
 [[package]]
