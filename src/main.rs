@@ -2,6 +2,7 @@ use core::{
   sort_by, to_final_inspects, FinalInspect, Inspect, Inspector, Language,
   Output,
 };
+use inspect_kotlin::KotlinInspector;
 use inspect_typescript::TypescriptInspector;
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
@@ -28,10 +29,16 @@ fn main() -> Result<(), Box<dyn Error>> {
 
   let language = Language::TypeScript;
 
-  let inspectors: HashMap<Language, Box<dyn Inspector>> = vec![(
-    Language::TypeScript,
-    Box::new(TypescriptInspector) as Box<dyn Inspector>,
-  )]
+  let inspectors: HashMap<Language, Box<dyn Inspector>> = vec![
+    (
+      Language::TypeScript,
+      Box::new(TypescriptInspector) as Box<dyn Inspector>,
+    ),
+    (
+      Language::Kotlin,
+      Box::new(KotlinInspector) as Box<dyn Inspector>,
+    ),
+  ]
   .into_iter()
   .collect();
 

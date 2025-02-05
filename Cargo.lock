@@ -454,6 +454,7 @@ name = "inspect_kotlin"
 version = "0.1.0"
 dependencies = [
  "cc",
+ "core",
  "tree-sitter",
  "tree-sitter-kotlin",
 ]
