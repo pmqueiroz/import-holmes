@@ -1,7 +1,7 @@
+use core::{FinalInspect, Inspect, Inspector};
 use inspect_core::{Output, TypescriptInspector};
 use rayon::prelude::{IntoParallelRefIterator, ParallelIterator};
 use serde::{Deserialize, Serialize};
-use shared::{FinalInspect, Inspect, Inspector};
 use std::collections::HashMap;
 use std::error::Error;
 use std::fs;

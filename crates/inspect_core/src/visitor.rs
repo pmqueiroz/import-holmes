@@ -1,4 +1,4 @@
-use shared::{Inspect, RawInspect};
+use core::{Inspect, RawInspect};
 use std::collections::HashMap;
 use swc_ecma_ast::*;
 use swc_ecma_visit::Visit;

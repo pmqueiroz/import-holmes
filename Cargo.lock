@@ -145,6 +145,14 @@ dependencies = [
 ]
 
 [[package]]
+name = "core"
+version = "0.1.0"
+dependencies = [
+ "serde",
+ "serde_json",
+]
+
+[[package]]
 name = "crossbeam-channel"
 version = "0.5.7"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -430,6 +438,7 @@ name = "import-holmes"
 version = "0.4.0"
 dependencies = [
  "clap",
+ "core",
  "globwalk",
  "inspect_core",
  "inspect_kotlin",
@@ -438,16 +447,15 @@ dependencies = [
  "rayon",
  "serde",
  "serde_json",
- "shared",
 ]
 
 [[package]]
 name = "inspect_core"
 version = "0.1.0"
 dependencies = [
+ "core",
  "serde",
  "serde_json",
- "shared",
  "swc_common",
  "swc_ecma_ast",
  "swc_ecma_parser",
@@ -1025,14 +1033,6 @@ dependencies = [
  "memchr",
  "ryu",
  "serde",
-]
-
-[[package]]
-name = "shared"
-version = "0.1.0"
-dependencies = [
- "serde",
- "serde_json",
 ]
 
 [[package]]
