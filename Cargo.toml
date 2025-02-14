@@ -1,6 +1,6 @@
 [package]
 name = "import-holmes"
-version = "0.5.1"
+version = "0.6.0"
 authors = ["Peam <contact@pmqueiroz.dev>"]
 description = "A tool to inspect projects imports"
 license = "MIT"
