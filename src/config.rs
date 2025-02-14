@@ -185,6 +185,7 @@ fn resolve_output(output: Option<String>) -> Option<Output> {
   match output {
     Some(ref s) if s.eq_ignore_ascii_case("json") => Some(Output::Json),
     Some(ref s) if s.eq_ignore_ascii_case("table") => Some(Output::Table),
+    Some(ref s) if s.eq_ignore_ascii_case("csv") => Some(Output::Csv),
     _ => None,
   }
 }

@@ -34,7 +34,7 @@ brew install import-holmes
 | `-m`, `--module` | ts/js: `package.json.dependencies` kt: `*`| Filter inspection by module's name | `-m a,b` |
 | `-s`, `--specifiers` | - | Filter inspection by specifiers name | `-s Button,Text` |
 | `-g`, `--glob` | ts/js: `**/*.{ts,tsx}` kt: `**/*.kt` | Glob to select files to inspect | `-g components/*.{js}` |
-| `-o`, `--output` | `table` | Configure the output type | `-o json` |
+| `-o`, `--output` | `table` | Configure the output type | `-o json` `-o csv` |
 | `--sort` | `none` | Sort the output by `ocurrences` or `referenced` | `--sort referenced` |
 | `--language` | `typescript` | Select which language parser use | `--language kotlin` |
 

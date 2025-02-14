@@ -10,6 +10,7 @@ use std::path::PathBuf;
 pub enum Output {
   Json,
   Table,
+  Csv,
 }
 
 #[derive(Debug)]

@@ -13,6 +13,7 @@ use std::fs;
 mod config;
 #[macro_use]
 mod log;
+mod csv;
 mod json;
 mod table;
 
@@ -100,5 +101,6 @@ fn output_result(summary: InspectSummary, output: Output) {
   match output {
     Output::Json => json::inspects(summary),
     Output::Table => table::inspects(summary),
+    Output::Csv => csv::inspects(summary),
   }
 }
