@@ -25,8 +25,6 @@ pub fn read_package_json(cwd: &std::path::Path) -> Package {
     std::process::exit(1)
   });
 
-  println!("file: {:?}", file);
-
   let data: Package = serde_json::from_reader(file).unwrap_or_else(|_| {
     eprintln!("Failed to parse package.json file");
     std::process::exit(1)
