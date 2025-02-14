@@ -11,24 +11,35 @@ pub struct Package {
   pub dev_dependencies: HashMap<String, String>,
 }
 
-pub fn read_package_json(cwd: &PathBuf) -> Package {
-  let file_path = cwd.join("package.json");
-
-  if !file_path.exists() {
+pub fn read_package_json(cwd: &std::path::Path) -> Package {
+  let package_path = find_package_json(cwd).unwrap_or_else(|| {
     eprintln!(
-      "File package.json not found in {} make sure it's a node project",
+      "File package.json not found in any parent directories of {}",
       cwd.display()
     );
-    std::process::exit(1);
-  }
+    std::process::exit(1)
+  });
 
-  let file =
-    std::fs::File::open(file_path).expect("Failed to read package.json file");
+  let file = std::fs::File::open(package_path).unwrap_or_else(|_| {
+    eprintln!("Failed to read package.json file");
+    std::process::exit(1)
+  });
 
-  let data: Package =
-    serde_json::from_reader(file).expect("Failed to read package.json file");
+  println!("file: {:?}", file);
 
+  let data: Package = serde_json::from_reader(file).unwrap_or_else(|_| {
+    eprintln!("Failed to parse package.json file");
+    std::process::exit(1)
+  });
   data
+}
+
+fn find_package_json(dir: &std::path::Path) -> Option<std::path::PathBuf> {
+  let candidate = dir.join("package.json");
+  if candidate.exists() {
+    return Some(candidate);
+  }
+  dir.parent().and_then(find_package_json)
 }
 
 pub fn get_module_files(cwd: &PathBuf, include: Vec<String>) -> Vec<String> {
