@@ -6,8 +6,9 @@ use std::path::PathBuf;
 
 #[derive(Deserialize, Serialize, Debug)]
 pub struct Package {
+  #[serde(default)]
   pub dependencies: HashMap<String, String>,
-  #[serde(rename = "devDependencies")]
+  #[serde(default, rename = "devDependencies")]
   pub dev_dependencies: HashMap<String, String>,
 }
 
@@ -20,13 +21,13 @@ pub fn read_package_json(cwd: &std::path::Path) -> Package {
     std::process::exit(1)
   });
 
-  let file = std::fs::File::open(package_path).unwrap_or_else(|_| {
-    eprintln!("Failed to read package.json file");
+  let file = std::fs::File::open(package_path.clone()).unwrap_or_else(|_| {
+    eprintln!("Failed to read {} file.", package_path.display());
     std::process::exit(1)
   });
 
   let data: Package = serde_json::from_reader(file).unwrap_or_else(|_| {
-    eprintln!("Failed to parse package.json file");
+    eprintln!("Failed to parse {} file", package_path.display());
     std::process::exit(1)
   });
   data
