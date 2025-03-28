@@ -23,8 +23,7 @@ at any moment, check [issues][issues-url] page to check futures features and cur
 ### Installing
 
 ```sh
-brew tap pmqueiroz/tap
-brew install import-holmes
+brew install pmqueiroz/tap/import-holmes
 ```
 
 ### Cli args
